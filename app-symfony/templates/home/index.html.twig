@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="flex h-screen bg-[#F4F4F6] text-[#1E1E1E]">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#7A3E3E] text-white flex flex-col justify-between p-4">
+        <div>
+            <h2 class="text-2xl font-bold mb-8">Session Manager</h2>
+            <nav class="space-y-4">
+                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">🏠 Accueil</a>
+                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">📅 Sessions</a>
+                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">👨‍🎓 Stagiaires</a>
+                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">📚 Modules</a>
+                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">📂 Catégories</a>
+            </nav>
+        </div>
+        <a href="#" class="mt-4 block hover:bg-[#A55D5D] p-2 rounded">🚪 Déconnexion</a>
+    </aside>
+
+    <!-- Contenu -->
+<main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Modules -->
+    <div class="bg-white rounded shadow p-4 border-l-4 border-[#7A3E3E]">
+        <h2 class="text-lg font-semibold text-[#1E1E1E] mb-2">Modules</h2>
+        {% for module in modules %}
+            <div class="text-sm text-gray-700 border-b py-1">
+                {{ module.mudleName }} — {{ module.moduleCategory.categoryName }}
+            </div>
+        {% else %}
+            <p class="text-gray-500">Aucun module disponible.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Utilisateurs / Internes -->
+    <div class="bg-white rounded shadow p-4 border-l-4 border-[#7A3E3E]">
+        <h2 class="text-lg font-semibold text-[#1E1E1E] mb-2">Utilisateurs</h2>
+        {% for intern in interns %}
+            <div class="text-sm text-gray-700 border-b py-1">
+                {{ intern.interName }} — {{ intern.internCity }}
+            </div>
+        {% else %}
+            <p class="text-gray-500">Aucun utilisateur trouvé.</p>
+        {% endfor %}
+        {% for user in users %}
+            <div class="text-sm text-gray-700 border-b py-1">
+                {{ user.name }} — {{ user.city }}
+            </div>
+        {% else %}
+            <p class="text-gray-500">Aucun utilisateur trouvé.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Sessions -->
+    <div class="bg-white rounded shadow p-4 border-l-4 border-[#7A3E3E]">
+        <h2 class="text-lg font-semibold text-[#1E1E1E] mb-2">Sessions</h2>
+        {% for session in sessions %}
+            <div class="text-sm text-gray-700 border-b py-1">
+                {{ session.sessionName }} — {{ session.startDate|date("d/m/Y") }}
+            </div>
+        {% else %}
+            <p class="text-gray-500">Aucune session à venir.</p>
+        {% endfor %}
+    </div>
+
+</main>
+
+</div>
+{% endblock %}
