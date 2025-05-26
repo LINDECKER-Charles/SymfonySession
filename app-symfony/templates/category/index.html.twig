@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories{% endblock %}
+
+{% block content %}
+<div class="px-4 py-8 max-w-screen-md mx-auto space-y-6">
+  <h2 class="text-2xl font-bold text-[#3B4C66] mb-4">🗂️ Liste des catégories</h2>
+
+  <div class="bg-white shadow border rounded overflow-x-auto">
+    <table class="min-w-full text-left">
+      <thead class="bg-[#3B4C66] text-white">
+        <tr>
+          <th class="px-4 py-2">#</th>
+          <th class="px-4 py-2">Nom de la catégorie</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categorys %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ loop.index }}</td>
+            <td class="px-4 py-2">{{ category.categoryName }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="2" class="px-4 py-2 text-gray-500">Aucune catégorie trouvée.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

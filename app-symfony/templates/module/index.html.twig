@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des modules{% endblock %}
+
+{% block content %}
+<div class="p-8">
+  <h1 class="text-2xl font-bold text-[#3B4C66] mb-6">📚 Modules</h1>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border shadow rounded">
+      <thead class="bg-[#3B4C66] text-white">
+        <tr>
+          <th class="text-left px-4 py-2">📌 Nom</th>
+          <th class="text-left px-4 py-2">🗂️ Catégorie</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for module in modules %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ module.mudleName }}</td>
+            <td class="px-4 py-2">{{ module.moduleCategory.categoryName }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="2" class="px-4 py-2 text-gray-500">Aucun module trouvé.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

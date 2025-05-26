@@ -2,71 +2,177 @@
 
 {% block title %}Dashboard{% endblock %}
 
-{% block body %}
-<div class="flex h-screen bg-[#F4F4F6] text-[#1E1E1E]">
+{% block content %}
+<div class="flex flex-wrap justify-center gap-6 px-4 py-8 max-w-screen-xl mx-auto">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-[#7A3E3E] text-white flex flex-col justify-between p-4">
-        <div>
-            <h2 class="text-2xl font-bold mb-8">Session Manager</h2>
-            <nav class="space-y-4">
-                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">🏠 Accueil</a>
-                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">📅 Sessions</a>
-                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">👨‍🎓 Stagiaires</a>
-                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">📚 Modules</a>
-                <a href="#" class="block hover:bg-[#A55D5D] p-2 rounded">📂 Catégories</a>
-            </nav>
+    {% if 'ROLE_ADMIN' in app.user.roles %}
+    <!-- USERS -->
+        <section class="bg-white border rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+            <h2 class="text-xl font-bold mb-4 text-[#3B4C66]">👥 Utilisateurs</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="bg-[#3B4C66] text-white">
+                        <tr>
+                            <th class="text-left px-4 py-2">🧑 Nom</th>
+                            <th class="text-left px-4 py-2">📧 Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr class="border-t">
+                                <td class="px-4 py-2">{{ user.name }}</td>
+                                <td class="px-4 py-2">{{ user.email }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="px-4 py-2 text-gray-500">Aucun utilisateur</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    <!-- INTERNS -->
+        <section class="bg-white border rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+            <h2 class="text-xl font-bold mb-4 text-[#3B4C66]">🧑‍🎓 Stagiaires</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="bg-[#3B4C66] text-white">
+                        <tr>
+                            <th class="text-left px-4 py-2">👤 Nom</th>
+                            <th class="text-left px-4 py-2">🏙️ Ville</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for intern in interns %}
+                            <tr class="border-t">
+                                <td class="px-4 py-2">{{ intern.interName }}</td>
+                                <td class="px-4 py-2">{{ intern.internCity }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="px-4 py-2 text-gray-500">Aucun stagiaire</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    {% endif %}
+
+    {% set now = "now"|date("U") %}
+
+    <!-- 📅 Sessions à venir -->
+    <section class="bg-white border-l-4 border-green-600 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+        <h2 class="text-xl font-bold mb-4 text-green-700">📅 Sessions à venir</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-green-700 text-white">
+                    <tr>
+                        <th class="text-left px-4 py-2">📝 Nom</th>
+                        <th class="text-left px-4 py-2">📆 Dates</th>
+                        <th class="text-left px-4 py-2">👥 Places</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set hasUpcoming = false %}
+                {% for session in sessions %}
+                    {% if session.startDate|date("U") >= now %}
+                    {% set hasUpcoming = true %}
+                    {% set rate = session.nbPlaceReserved / session.nbPlaceTt * 100 %}
+                    <tr class="border-t">
+                        <td class="px-4 py-2"><a class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition" href="{{ path('detail_session', {'id': session.id}) }}">{{ session.sessionName }}</a></td>
+                        <td class="px-4 py-2">
+                        {{ session.startDate|date('d/m/Y') }} – {{ session.endDate|date('d/m/Y') }}
+                        </td>
+                        <td class="px-4 py-2
+                        {% if rate >= 90 %}
+                            bg-red-100 text-red-700
+                        {% elseif rate >= 60 %}
+                            bg-yellow-100 text-yellow-800
+                        {% else %}
+                            bg-green-100 text-green-700
+                        {% endif %}">
+                        {{ session.nbPlaceReserved }}/{{ session.nbPlaceTt }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if not hasUpcoming %}
+                    <tr>
+                    <td colspan="3" class="px-4 py-2 text-gray-500">Aucune session à venir</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
         </div>
-        <a href="#" class="mt-4 block hover:bg-[#A55D5D] p-2 rounded">🚪 Déconnexion</a>
-    </aside>
+    </section>
 
-    <!-- Contenu -->
-<main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- 📁 Sessions passées -->
+    <section class="bg-white border-l-4 border-gray-400 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+        <h2 class="text-xl font-bold mb-4 text-gray-700">📁 Sessions passées</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-gray-700 text-white">
+                    <tr>
+                        <th class="text-left px-4 py-2">📝 Nom</th>
+                        <th class="text-left px-4 py-2">📆 Dates</th>
+                        <th class="text-left px-4 py-2">👥 Places</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set hasPast = false %}
+                {% for session in sessions %}
+                    {% if session.startDate|date("U") < now %}
+                    {% set hasPast = true %}
+                    <tr class="border-t text-gray-600">
+                        <td class="px-4 py-2"><a class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition" href="{{ path('detail_session', {'id': session.id}) }}">{{ session.sessionName }}</a></td>
+                        <td class="px-4 py-2">
+                        {{ session.startDate|date('d/m/Y') }} – {{ session.endDate|date('d/m/Y') }}
+                        </td>
+                        <td class="px-4 py-2">{{ session.nbPlaceReserved }}/{{ session.nbPlaceTt }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if not hasPast %}
+                    <tr>
+                    <td colspan="3" class="px-4 py-2 text-gray-500">Aucune session passée</td>
+                    </tr>
+                {% endif %}
+                </tbody>
 
-    <!-- Modules -->
-    <div class="bg-white rounded shadow p-4 border-l-4 border-[#7A3E3E]">
-        <h2 class="text-lg font-semibold text-[#1E1E1E] mb-2">Modules</h2>
-        {% for module in modules %}
-            <div class="text-sm text-gray-700 border-b py-1">
-                {{ module.mudleName }} — {{ module.moduleCategory.categoryName }}
-            </div>
-        {% else %}
-            <p class="text-gray-500">Aucun module disponible.</p>
-        {% endfor %}
-    </div>
+            </table>
+        </div>
+    </section>
 
-    <!-- Utilisateurs / Internes -->
-    <div class="bg-white rounded shadow p-4 border-l-4 border-[#7A3E3E]">
-        <h2 class="text-lg font-semibold text-[#1E1E1E] mb-2">Utilisateurs</h2>
-        {% for intern in interns %}
-            <div class="text-sm text-gray-700 border-b py-1">
-                {{ intern.interName }} — {{ intern.internCity }}
-            </div>
-        {% else %}
-            <p class="text-gray-500">Aucun utilisateur trouvé.</p>
-        {% endfor %}
-        {% for user in users %}
-            <div class="text-sm text-gray-700 border-b py-1">
-                {{ user.name }} — {{ user.city }}
-            </div>
-        {% else %}
-            <p class="text-gray-500">Aucun utilisateur trouvé.</p>
-        {% endfor %}
-    </div>
 
-    <!-- Sessions -->
-    <div class="bg-white rounded shadow p-4 border-l-4 border-[#7A3E3E]">
-        <h2 class="text-lg font-semibold text-[#1E1E1E] mb-2">Sessions</h2>
-        {% for session in sessions %}
-            <div class="text-sm text-gray-700 border-b py-1">
-                {{ session.sessionName }} — {{ session.startDate|date("d/m/Y") }}
-            </div>
-        {% else %}
-            <p class="text-gray-500">Aucune session à venir.</p>
-        {% endfor %}
-    </div>
-
-</main>
+    <!-- MODULES -->
+    <section class="bg-white border rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+        <h2 class="text-xl font-bold mb-4 text-[#3B4C66]">📚 Modules</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-[#3B4C66] text-white">
+                    <tr>
+                        <th class="text-left px-4 py-2">📌 Nom</th>
+                        <th class="text-left px-4 py-2">🗂️ Catégorie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for module in modules %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ module.mudleName }}</td>
+                            <td class="px-4 py-2">{{ module.moduleCategory.categoryName }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="px-4 py-2 text-gray-500">Aucun module</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
 </div>
 {% endblock %}

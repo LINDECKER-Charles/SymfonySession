@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block content %}
+<div class="px-4 py-8 max-w-screen-xl mx-auto space-y-6">
+
+  <h2 class="text-2xl font-bold text-[#3B4C66] mb-6">👥 Liste des utilisateurs</h2>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow border rounded">
+      <thead class="bg-[#3B4C66] text-white">
+        <tr>
+          <th class="text-left px-4 py-2">🧑 Nom</th>
+          <th class="text-left px-4 py-2">📧 Email</th>
+          <th class="text-left px-4 py-2">🏙️ Ville</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ user.name }}</td>
+            <td class="px-4 py-2">{{ user.email }}</td>
+            <td class="px-4 py-2">{{ user.city }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="3" class="px-4 py-2 text-gray-500">Aucun utilisateur trouvé.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

@@ -24,9 +24,16 @@ CREATE TABLE IF NOT EXISTS `category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `category_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.category : ~0 rows (environ)
+-- Listage des données de la table session-symfony.category : ~4 rows (environ)
+INSERT INTO `category` (`id`, `category_name`) VALUES
+	(1, 'Bureautique'),
+	(2, 'Développement Web'),
+	(3, 'Design'),
+	(4, 'Marketing'),
+	(101, 'Virtualisation'),
+	(102, 'Sécurité Réseau');
 
 -- Listage de la structure de table session-symfony. doctrine_migration_versions
 CREATE TABLE IF NOT EXISTS `doctrine_migration_versions` (
@@ -51,9 +58,12 @@ CREATE TABLE IF NOT EXISTS `intern` (
   `intern_birth` date NOT NULL,
   `intern_email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.intern : ~0 rows (environ)
+-- Listage des données de la table session-symfony.intern : ~2 rows (environ)
+INSERT INTO `intern` (`id`, `inter_name`, `intern_sex`, `intern_city`, `intern_cp`, `intern_adress`, `intern_birth`, `intern_email`) VALUES
+	(1, 'Virginie Thomas', 'Femme', 'Sainte Virginie', '48140', '104, rue de Collet', '1992-11-22', 'virginie.thomas@example.com'),
+	(2, 'Rémy Lemoine-Blin', 'Femme', 'Hamel', '42353', '4, rue Evrard', '1998-09-21', 'daniellelefebvre@noos.fr');
 
 -- Listage de la structure de table session-symfony. intern_session
 CREATE TABLE IF NOT EXISTS `intern_session` (
@@ -93,9 +103,18 @@ CREATE TABLE IF NOT EXISTS `module` (
   PRIMARY KEY (`id`),
   KEY `IDX_C2426289C6D9730` (`module_category_id`),
   CONSTRAINT `FK_C2426289C6D9730` FOREIGN KEY (`module_category_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.module : ~0 rows (environ)
+-- Listage des données de la table session-symfony.module : ~6 rows (environ)
+INSERT INTO `module` (`id`, `module_category_id`, `mudle_name`) VALUES
+	(1, 1, 'Word'),
+	(2, 1, 'Excel'),
+	(3, 2, 'PHP'),
+	(4, 2, 'JavaScript'),
+	(5, 3, 'Photoshop'),
+	(6, 4, 'SEO'),
+	(201, 101, 'VMware & Hyper-V'),
+	(202, 102, 'Firewall & VPN');
 
 -- Listage de la structure de table session-symfony. programme
 CREATE TABLE IF NOT EXISTS `programme` (
@@ -121,9 +140,18 @@ CREATE TABLE IF NOT EXISTS `session` (
   `nb_place_tt` int NOT NULL,
   `nb_place_reserved` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.session : ~0 rows (environ)
+-- Listage des données de la table session-symfony.session : ~5 rows (environ)
+INSERT INTO `session` (`id`, `session_name`, `start_date`, `end_date`, `nb_place_tt`, `nb_place_reserved`) VALUES
+	(1, 'Session 1', '2024-04-30 09:00:00', '2024-05-10 17:00:00', 20, 12),
+	(2, 'Session 2', '2024-05-05 09:00:00', '2024-05-15 17:00:00', 20, 14),
+	(3, 'Session 3', '2024-05-10 09:00:00', '2024-05-20 17:00:00', 20, 8),
+	(4, 'Session 4', '2024-05-15 09:00:00', '2024-05-25 17:00:00', 20, 10),
+	(5, 'Session 5', '2024-05-20 09:00:00', '2024-05-30 17:00:00', 20, 7),
+	(100, 'Session Full Stack Web', '2024-06-01 00:00:00', '2024-07-15 00:00:00', 10, 4),
+	(301, 'Session Virtualisation - Mars 2024', '2024-03-01 00:00:00', '2024-03-10 00:00:00', 20, 18),
+	(302, 'Session Sécurité - Avril 2024', '2024-04-05 00:00:00', '2024-04-15 00:00:00', 15, 12);
 
 -- Listage de la structure de table session-symfony. user
 CREATE TABLE IF NOT EXISTS `user` (
@@ -139,9 +167,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `birth` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.user : ~0 rows (environ)
+-- Listage des données de la table session-symfony.user : ~2 rows (environ)
+INSERT INTO `user` (`id`, `email`, `roles`, `password`, `name`, `sex`, `city`, `cp`, `adress`, `birth`) VALUES
+	(2, 'charles.lindecker@outlook.fr', '["ROLE_ADMIN"]', '$2y$13$2sf12r2fmKu7YzMTsq0H6uOTrl1AvYSBjTO/GgVk.tPHKhR1LJisq', 'LINDECKER Charles', 'Homme', 'BAAHAHA', '68720', 'BAAHH65', '2003-07-28'),
+	(3, 'jean.edouard@ratio.gg', '[]', '$2y$13$UljnNf1Yr6v3HkGt4zxoxuziE6rAw4wa.RyFBXdNzxDKhtsiT0Z0O', 'Jean EDOUARD', 'Homme', 'aezaezaez', 'aezaezaez', 'aezaezaez', '0001-12-06');
 
 -- Listage de la structure de table session-symfony. user_session
 CREATE TABLE IF NOT EXISTS `user_session` (

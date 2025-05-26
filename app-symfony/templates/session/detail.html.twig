@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la session{% endblock %}
+
+{% block content %}
+<div class="px-4 py-8 max-w-screen-md mx-auto bg-white shadow rounded border border-gray-200 space-y-6">
+    <h2 class="text-2xl font-bold text-[#3B4C66]">📅 {{ session.sessionName }}</h2>
+
+    <div class="text-gray-700 space-y-2">
+        <p><strong>📆 Dates :</strong> Du {{ session.startDate|date('d/m/Y') }} au {{ session.endDate|date('d/m/Y') }}</p>
+        <p><strong>👥 Places :</strong> {{ session.nbPlaceReserved }}/{{ session.nbPlaceTt }}</p>
+    </div>
+
+    <div>
+        <h3 class="text-xl font-semibold mb-2 text-[#3B4C66]">📚 Modules associés</h3>
+        <ul class="list-disc list-inside text-gray-700">
+            {% for programme in session.programmes %}
+                <li>{{ programme.module.mudleName }}</li>
+            {% else %}
+                <li>Aucun module lié à cette session.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h3 class="text-xl font-semibold mb-2 text-[#3B4C66]">👤 Participants (Utilisateurs)</h3>
+        <ul class="list-disc list-inside text-gray-700">
+            {% for user in users %}
+                <li>{{ user.name }} – {{ user.email }}</li>
+            {% else %}
+                <li>Aucun utilisateur inscrit.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h3 class="text-xl font-semibold mt-4 mb-2 text-[#3B4C66]">🧑‍🎓 Stagiaires</h3>
+        <ul class="list-disc list-inside text-gray-700">
+            {% for intern in interns %}
+                <li>{{ intern.interName }} – {{ intern.internCity }}</li>
+            {% else %}
+                <li>Aucun stagiaire inscrit.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

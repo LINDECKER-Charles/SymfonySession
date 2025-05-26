@@ -12,7 +12,75 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="bg-[#F5F6FA] text-[#1F2937]">
+    <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#3B4C66] text-white p-4 flex flex-col">
+
+        <div class="flex flex-col items-center mt-2">
+            {% if app.user %}
+                    <a href="{{ path('app_logout') }}" class="self-end text-white hover:text-red-400 transition mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+                        </svg>
+                    </a>
+                <img src="https://i.pravatar.cc/150" alt="avatar" class="rounded-full w-24 h-24 mb-2" />
+                <div class="text-center">
+                    <p class="font-bold">{{ app.user.name }}</p>
+                    <p class="text-sm text-gray-300">
+                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                            Administrateur
+                        {% endif %}
+                    </p>
+                </div>
+            {% else %}
+                <a href="{{ path('app_login') }}"
+                class="mt-4 inline-block bg-[#3B4C66] text-white px-4 py-2 rounded hover:bg-[#4F627E] transition text-sm text-center">
+                Connexion
+                </a>
+            {% endif %}
+        </div>
+
+        <nav class="mt-10 space-y-2">
+            {% if app.user %}
+                <a href="{{ path('app_session') }}" class="block bg-white hover:text-white text-[#3B4C66] hover:bg-[#4F627E] px-3 py-2 rounded">📅 Session</a>
+                {% if 'ROLE_ADMIN' in app.user.roles %}
+                    <a href="{{ path('app_user') }}" class="block bg-white hover:bg-[#4F627E] hover:text-white text-[#3B4C66] px-3 py-2 rounded">👤 Utilisateur</a>
+                    <a href="{{ path('app_intern') }}" class="block bg-white hover:bg-[#4F627E] hover:text-white text-[#3B4C66] px-3 py-2 rounded">👨‍🎓 Stagiaire</a>
+                {% endif %}
+                <a href="{{ path('app_module') }}" class="block bg-white hover:bg-[#4F627E] text-[#3B4C66] hover:text-white px-3 py-2 rounded">📚 Liste des Modules</a>
+                <a href="{{ path('app_category') }}" class="block bg-white hover:bg-[#4F627E] text-[#3B4C66] hover:text-white px-3 py-2 rounded">📂 Liste des Categorie</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="block bg-white hover:bg-[#4F627E] text-[#3B4C66] hover:text-white px-3 py-2 rounded">📚 Liste des Modules</a>
+                <a href="{{ path('app_login') }}" class="block bg-white hover:text-white text-[#3B4C66] hover:bg-[#4F627E] px-3 py-2 rounded">📅 Session</a>
+                <a href="{{ path('app_category') }}" class="block bg-white hover:bg-[#4F627E] text-[#3B4C66] hover:text-white px-3 py-2 rounded">📂 Liste des Catégorie</a>
+            {% endif %}
+
+        </nav>
+    </aside>
+
+<!-- Content -->
+<div class="flex-1 flex flex-col min-w-0 bg-[#F5F6FA]">
+
+    <!-- Topbar -->
+    <header class="bg-[#3B4C66] text-white px-6 py-4 flex items-center justify-between shadow-md">
+        <h1 class="text-xl font-semibold tracking-wide">
+            <a href="{{ path('app_home') }}">SessionManager</a>
+        </h1>
+        <div class="w-full max-w-md relative">
+            <input type="text" placeholder="Recherche..."
+                   class="w-full pl-10 pr-4 py-2 rounded bg-white text-[#1F2937] shadow-sm ring-1 ring-gray-300 focus:outline-none focus:ring-[#3B4C66] transition" />
+            <span class="absolute left-3 top-2.5 text-[#3B4C66]">🔍</span>
+        </div>
+    </header>
+
+        <main class="flex-1 p-6 overflow-y-auto">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    </div>
     </body>
 </html>
