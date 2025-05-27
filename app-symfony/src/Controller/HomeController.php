@@ -17,6 +17,9 @@ final class HomeController extends AbstractController
     #[Route('/home', name: 'app_home')]
     public function index(ModuleRepository $moduleRepository, InternRepository $internRepository, UserRepository $userRepository,  SessionRepository $sessionRepository): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             $modules = $moduleRepository->findAll();
             $interns = $internRepository->findAll();
