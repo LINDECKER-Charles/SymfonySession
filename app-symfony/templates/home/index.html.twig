@@ -20,7 +20,7 @@
                     <tbody>
                         {% for user in users %}
                             <tr class="border-t">
-                                <td class="px-4 py-2">{{ user.name }}</td>
+                                <td class="px-4 py-2"><a href="{{ path('profil', {'id': user.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ user.name }}</a></td>
                                 <td class="px-4 py-2">{{ user.email }}</td>
                             </tr>
                         {% else %}
@@ -47,7 +47,7 @@
                     <tbody>
                         {% for intern in interns %}
                             <tr class="border-t">
-                                <td class="px-4 py-2">{{ intern.interName }}</td>
+                                <td class="px-4 py-2"><a href="{{ path('profilS', {'id': intern.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ intern.interName }}</a></td>
                                 <td class="px-4 py-2">{{ intern.internCity }}</td>
                             </tr>
                         {% else %}

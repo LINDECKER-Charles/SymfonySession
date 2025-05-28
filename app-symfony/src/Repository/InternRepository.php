@@ -31,6 +31,7 @@ class InternRepository extends ServiceEntityRepository
         return $qb
             ->where($qb->expr()->notIn('i.id', $sub->getDQL())) /* Ne garde que les intern dont l'id n'est pas dans la sous requet */
             ->setParameter('sessionId', $sessionId) /* Défini la variable en paramètre dans notre sous requet */
+            /* ->orderBy('i.interName', 'ASC') */ /* Trie dans l'ordre alphabétique */
             ->getQuery() /* Execute la requet */
             ->getResult(); /* Retourne le résultat */
     }

@@ -47,7 +47,7 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
         ])
         ->add('agreeTerms', CheckboxType::class, [
             'mapped' => false,
-            'constraints' => [
+            'constraints' => [ 
                 new IsTrue([
                     'message' => 'Vous devez accepter les conditions.',
                 ]),

@@ -19,7 +19,7 @@
       <tbody>
         {% for intern in interns %}
           <tr class="border-t">
-            <td class="px-4 py-2">{{ intern.interName }}</td>
+            <td class="px-4 py-2"><a href="{{ path('profilS', {'id': intern.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ intern.interName }}</a></td>
             <td class="px-4 py-2">{{ intern.internCity }}</td>
             <td class="px-4 py-2">{{ intern.internEmail }}</td>
           </tr>

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ intern.interName }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white rounded shadow p-6 mt-8 space-y-6">
+    <h2 class="text-2xl font-bold text-[#3B4C66] mb-4">🧑‍🎓 Profil de {{ intern.interName }}</h2>
+
+    <div class="grid md:grid-cols-2 gap-4 text-gray-700">
+        <p><strong>Ville :</strong> {{ intern.internCity }}</p>
+        <p><strong>Sexe :</strong> {{ intern.internSex }}</p>
+        <p><strong>Date de naissance :</strong> {{ intern.internBirth|date('d/m/Y') }}</p>
+    </div>
+
+    <div>
+        <h3 class="text-xl font-semibold mt-4 mb-2 text-[#3B4C66]">📅 Sessions suivies</h3>
+        <ul class="divide-y divide-gray-200">
+            {% for session in sessions %}
+                <li class="py-2">
+                    <a href="{{ path('detail_session', {'id': session.id}) }}" class="text-blue-600 hover:underline">
+                        {{ session.sessionName }}
+                    </a>
+                    – Du {{ session.startDate|date('d/m/Y') }} au {{ session.endDate|date('d/m/Y') }}
+                </li>
+            {% else %}
+                <li>Ce stagiaire n’est inscrit à aucune session.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

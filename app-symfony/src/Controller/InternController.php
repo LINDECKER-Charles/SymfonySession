@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Intern;
 use App\Repository\InternRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,5 +21,20 @@ final class InternController extends AbstractController
         }else{
             return $this->redirectToRoute('app_home');  
         }
+    }
+    
+    #[Route('/profilS/{id}', name: 'profilS')]
+    public function detailUser(int $id, InternRepository $internRepository): Response
+    {
+        $intern = $internRepository->find($id);
+
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('intern/detail.html.twig', [
+        'intern' => $intern,
+        'sessions' => $intern->getSessions(),
+        ]);
     }
 }

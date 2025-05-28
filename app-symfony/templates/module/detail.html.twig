@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail Module{% endblock %}
+
+{% block content %}
+<div class="px-4 py-8 max-w-screen-md mx-auto bg-white shadow rounded border border-gray-200 space-y-6">
+    <h2 class="text-2xl font-bold text-[#3B4C66]">📘 {{ module.mudleName }}</h2>
+
+    <div class="text-gray-700">
+        <p><strong>📁 Catégorie :</strong> <a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.moduleCategory.categoryName }}</a></p>
+    </div>
+
+    <div>
+        <h3 class="text-xl font-semibold mt-4 mb-2 text-[#3B4C66]">📅 Sessions associées</h3>
+        {% if module.programmes is not empty %}
+            <div class="overflow-auto max-h-96 border rounded">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-[#3B4C66] text-white">
+                        <tr>
+                            <th class="p-3">Nom</th>
+                            <th class="p-3">Début</th>
+                            <th class="p-3">Fin</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        {% for programme in module.programmes %}
+                            <tr class="border-t">
+                                <td class="p-3"><a class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition" href="{{ path('detail_session', {'id': programme.session.id}) }}">{{ programme.session.sessionName }}</a></td>
+                                <td class="p-3">{{ programme.session.startDate|date('d/m/Y') }}</td>
+                                <td class="p-3">{{ programme.session.endDate|date('d/m/Y') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500">Aucune session liée à ce module.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

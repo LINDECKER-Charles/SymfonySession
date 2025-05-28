@@ -8,14 +8,14 @@
 
     <div class="text-gray-700 space-y-2">
         <p><strong>📆 Dates :</strong> Du {{ session.startDate|date('d/m/Y') }} au {{ session.endDate|date('d/m/Y') }}</p>
-        <p><strong>👥 Places :</strong> {{ session.nbPlaceReserved }}/{{ session.nbPlaceTt }}</p>
+        <p><strong>👥 Places :</strong> {{ session.nbPlaceReserved + session.interns|length }}/{{ session.nbPlaceTt }}</p>
     </div>
 
     <div>
         <h3 class="text-xl font-semibold mb-2 text-[#3B4C66]">📚 Modules associés</h3>
         <ul class="list-disc list-inside text-gray-700">
             {% for programme in session.programmes %}
-                <li>{{ programme.module.mudleName }}</li>
+                <li><a href="{{ path('detail_module', {'id': programme.module.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ programme.module.mudleName }}</a></li>
             {% else %}
                 <li>Aucun module lié à cette session.</li>
             {% endfor %}
@@ -26,7 +26,7 @@
         <h3 class="text-xl font-semibold mb-2 text-[#3B4C66]">👤 Formateur</h3>
         <ul class="list-disc list-inside text-gray-700">
             {% for user in users %}
-                <li>{{ user.name }} – {{ user.email }}</li>
+                <li><a href="{{ path('profil', {'id': user.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ user.name }}</a> – {{ user.email }}</li>
             {% else %}
                 <li>Aucun utilisateur inscrit.</li>
             {% endfor %}
@@ -40,7 +40,20 @@
             <div class="overflow-y-auto max-h-[40vh] pr-2">
                 <ul class="list-disc list-inside text-gray-700">
                     {% for intern in interns %}
-                        <li>{{ intern.interName }} – {{ intern.internCity }}</li>
+                        <li class="flex items-center justify-between bg-gray-50 px-4 py-2 rounded shadow-sm mb-2">
+                        <div>
+                            <a href="{{ path('profilS', {'id': intern.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                            {{ intern.interName }}
+                            </a>
+                            <span class="text-gray-600 ml-2">– {{ intern.internCity }}</span>
+                        </div>
+                        {% if 'ROLE_ADMIN' in app.user.roles or session.users.contains(app.user) %}
+                            <a href="{{ path('del_intern', {'idI': intern.id, 'idS': session.id}) }}"
+                            class="bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded shadow inline-flex items-center transition duration-200">
+                            ❌
+                            </a>
+                        {% endif %}
+                        </li>
                     {% else %}
                         <li>Aucun stagiaire inscrit.</li>
                     {% endfor %}
@@ -53,7 +66,20 @@
             <div class="overflow-y-auto max-h-[40vh] pr-2">
                 <ul class="list-disc list-inside text-gray-700">
                     {% for intern in notInterns %}
-                        <li>{{ intern.interName }} – {{ intern.internCity }}</li>
+                        <li class="flex items-center justify-between bg-gray-50 px-4 py-2 rounded shadow-sm mb-2">
+                        <div>
+                            <a href="{{ path('profilS', {'id': intern.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                            {{ intern.interName }}
+                            </a>
+                            <span class="text-gray-600 ml-2">– {{ intern.internCity }}</span>
+                        </div>
+                        {% if 'ROLE_ADMIN' in app.user.roles or session.users.contains(app.user) %}
+                            <a href="{{ path('add_intern', {'idI': intern.id, 'idS': session.id}) }}"
+                            class="bg-green-300 hover:bg-green-400 text-white font-bold py-1 px-3 rounded shadow inline-flex items-center">
+                                ➕
+                            </a>
+                        {% endif %}
+                        </li>
                     {% else %}
                         <li>Tous les stagiaires sont inscrits.</li>
                     {% endfor %}

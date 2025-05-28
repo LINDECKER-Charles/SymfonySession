@@ -5,6 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="icon" href="{{ asset('favicon.ico') }}">
         {% block stylesheets %}
         {% endblock %}
 
@@ -27,15 +28,21 @@
                                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
                         </svg>
                     </a>
-                <img src="https://i.pravatar.cc/150" alt="avatar" class="rounded-full w-24 h-24 mb-2" />
-                <div class="text-center">
-                    <p class="font-bold">{{ app.user.name }}</p>
-                    <p class="text-sm text-gray-300">
-                        {% if 'ROLE_ADMIN' in app.user.roles %}
-                            Administrateur
-                        {% endif %}
-                    </p>
-                </div>
+                    <a href="{{ path('profil', {'id': app.user.id}) }}"
+                    class="block text-center rounded-lg p-4 transition transform hover:-translate-y-1 hover:scale-105 duration-300 bg-white shadow hover:shadow-lg">
+                        <img src="https://i.pravatar.cc/150" alt="avatar" class="rounded-full w-24 h-24 mx-auto mb-3 shadow-md border border-gray-300" />
+                        <p class="font-bold text-[#3B4C66]">{{ app.user.name }}</p>
+                        <p class="text-sm text-gray-500">
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                Administrateur
+                            {% elseif 'FORMATEUR' in app.user.roles %}
+                                Formateur
+                            {% else %}
+                                Utilisateur
+                            {% endif %}
+                        </p>
+                    </a>
+
             {% else %}
                 <a href="{{ path('app_login') }}"
                 class="mt-4 inline-block bg-[#3B4C66] text-white px-4 py-2 rounded hover:bg-[#4F627E] transition text-sm text-center">

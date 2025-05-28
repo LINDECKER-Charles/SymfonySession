@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,5 +21,20 @@ final class UserController extends AbstractController
         }else{
             return $this->redirectToRoute('app_home');  
         } 
+    }
+
+    #[Route('/profil/{id}', name: 'profil')]
+    public function detailUser(int $id, UserRepository $userRepository): Response
+    {
+        $user = $userRepository->find($id);
+
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('user/detail.html.twig', [
+        'user' => $user,
+        'sessions' => $user->getSessions(),
+        ]);
     }
 }

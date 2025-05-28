@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Session;
+use App\Form\SessionForm;
 use App\Repository\UserRepository;
 use App\Repository\InternRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\SessionRepository;
+use Symfony\Component\Form\FormError;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class SessionController extends AbstractController
 {
     #[Route('/session', name: 'app_session')]
-    public function index(ModuleRepository $moduleRepository, InternRepository $internRepository, UserRepository $userRepository,  SessionRepository $sessionRepository): Response
+    public function index(SessionRepository $sessionRepository): Response
     {
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             $sessions = $sessionRepository->findAll();
@@ -30,8 +35,43 @@ final class SessionController extends AbstractController
         } 
     }
 
-    #[Route('/session/{id}', name: 'detail_session')]
-    public function detailSession(int $id, SessionRepository $sessionRepository, InternRepository $internRepository): Response
+    #[Route('/creationSession', name: 'creation_session')]
+    public function creationSession(Request $request, SessionForm $sessionForm, SessionRepository $sessionRepository, EntityManagerInterface $entityManager): Response
+    {
+        if (!($this->getUser() && (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())))) {
+            return $this->redirectToRoute('app_home');
+        }
+
+
+
+        $session = new Session();
+        $form = $this->createForm(SessionForm::class, $session);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $existing = $sessionRepository->findOneBy(['sessionName' => $session->getSessionName()]);
+
+            if ($existing) {
+                $form->addError(new FormError('Session déjà existante'));
+            } else {
+            foreach ($session->getInterns() as $intern) {
+                $intern->addSession($session);
+            }
+                $session->addUser($this->getUser());
+                $entityManager->persist($session);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('detail_session', ['id' => $session->getId()]);
+            }
+        }
+
+        return $this->render('session/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/session/{id}', name: 'detail_session')]public function detailSession(int $id, SessionRepository $sessionRepository, InternRepository $internRepository): Response
     {
         $session = $sessionRepository->find($id);
 
@@ -39,12 +79,51 @@ final class SessionController extends AbstractController
             throw $this->createNotFoundException('Session introuvable.');
         }
 
+        $interns = $session->getInterns()->toArray();
+        usort($interns, fn($a, $b) => strcmp($a->getInterName(), $b->getInterName()));
+
+        $notInterns = $internRepository->findByNotInSession($session->getId());
+        usort($notInterns, fn($a, $b) => strcmp($a->getInterName(), $b->getInterName()));
+
         return $this->render('session/detail.html.twig', [
             'session' => $session,
             'users' => $session->getUsers(),
-            'interns' => $session->getInterns(),
-            'notInterns' => $internRepository->findByNotInSession($session->getId()),
+            'interns' => $interns,
+            'notInterns' => $notInterns,
         ]);
     }
 
+    #[Route('/session/add_intern/{idS}/{idI}', name: 'add_intern')]
+    public function addIntern(int $idS, int $idI, SessionRepository $sessionRepository, InternRepository $internRepository, EntityManagerInterface $em): Response
+    {
+        if (!($this->getUser() && (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())))) {
+            return $this->redirectToRoute('app_home');
+        }
+        $session = $sessionRepository->find($idS);
+        $intern = $internRepository->find($idI);
+
+        $session->addIntern($intern);
+        $em->persist($session);
+        $em->flush();
+
+        return $this->redirectToRoute('detail_session', ['id' => $idS]);
+
+
+    }
+
+    #[Route('/session/del_intern/{idS}/{idI}', name: 'del_intern')]
+    public function delIntern(int $idS, int $idI, SessionRepository $sessionRepository, InternRepository $internRepository, EntityManagerInterface $em): Response
+    {
+        if (!($this->getUser() && (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())))) {
+            return $this->redirectToRoute('app_home');
+        }
+        $session = $sessionRepository->find($idS);
+        $intern = $internRepository->find($idI);
+
+        $session->removeIntern($intern);
+        $em->persist($session);
+        $em->flush();
+
+        return $this->redirectToRoute('detail_session', ['id' => $idS]);
+    }
 }

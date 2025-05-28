@@ -17,8 +17,8 @@
       <tbody>
         {% for module in modules %}
           <tr class="border-t">
-            <td class="px-4 py-2">{{ module.mudleName }}</td>
-            <td class="px-4 py-2">{{ module.moduleCategory.categoryName }}</td>
+            <td class="px-4 py-2"><a href="{{ path('detail_module', {'id': module.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.mudleName }}</a></td>
+            <td class="px-4 py-2"><a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.moduleCategory.categoryName }}</a></td>
           </tr>
         {% else %}
           <tr>

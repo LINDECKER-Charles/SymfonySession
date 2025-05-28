@@ -19,6 +19,15 @@ final class ModuleController extends AbstractController
         ]);
     }
 
+    #[Route('/module/{id}/', name: 'detail_module')]
+    public function moduleDetail(ModuleRepository $moduleRepository, int $id): Response
+    {
+        $module = $moduleRepository->find($id);
+        return $this->render('module/detail.html.twig', [
+            'module' => $module,
+        ]);
+    }
+
     #[Route('/category', name: 'app_category')]
     public function indexbis(CategoryRepository $categoryRepository): Response
     {
@@ -27,4 +36,14 @@ final class ModuleController extends AbstractController
             'categorys' => $categorys,
         ]);
     } 
+    
+    #[Route('/category/{id}/', name: 'detail_category')]
+    public function categoryDetail(CategoryRepository $categoryRepository, int $id): Response
+    {
+        $category = $categoryRepository->find($id);
+        return $this->render('category/detail.html.twig', [
+            'category' => $category,
+        ]);
+    } 
+
 }
