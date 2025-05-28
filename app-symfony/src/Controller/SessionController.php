@@ -31,7 +31,7 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/session/{id}', name: 'detail_session')]
-    public function detailSession(int $id, SessionRepository $sessionRepository): Response
+    public function detailSession(int $id, SessionRepository $sessionRepository, InternRepository $internRepository): Response
     {
         $session = $sessionRepository->find($id);
 
@@ -43,6 +43,7 @@ final class SessionController extends AbstractController
             'session' => $session,
             'users' => $session->getUsers(),
             'interns' => $session->getInterns(),
+            'notInterns' => $internRepository->findByNotInSession($session->getId()),
         ]);
     }
 

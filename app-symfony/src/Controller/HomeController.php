@@ -14,6 +14,8 @@ use App\Entity\User;
 
 final class HomeController extends AbstractController
 {
+
+
     #[Route('/home', name: 'app_home')]
     public function index(ModuleRepository $moduleRepository, InternRepository $internRepository, UserRepository $userRepository,  SessionRepository $sessionRepository): Response
     {
@@ -52,9 +54,11 @@ final class HomeController extends AbstractController
                 'sessions' => $sessions,
             ]);   
         } 
-
         /* dd($re->getSession()); */
-
-
+    }
+    #[Route('/', name: 'redirect_home')]
+    public function redirectHome(): Response
+    {
+        return $this->redirectToRoute('app_home');
     }
 }

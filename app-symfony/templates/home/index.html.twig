@@ -7,11 +7,11 @@
 
     {% if 'ROLE_ADMIN' in app.user.roles %}
     <!-- USERS -->
-        <section class="bg-white border rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+        <section class="bg-white border-l-4 border-gray-400 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
             <h2 class="text-xl font-bold mb-4 text-[#3B4C66]">👥 Utilisateurs</h2>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
                 <table class="min-w-full">
-                    <thead class="bg-[#3B4C66] text-white">
+                    <thead class="sticky top-0 bg-[#3B4C66] text-white z-10">
                         <tr>
                             <th class="text-left px-4 py-2">🧑 Nom</th>
                             <th class="text-left px-4 py-2">📧 Email</th>
@@ -34,11 +34,11 @@
         </section>
 
     <!-- INTERNS -->
-        <section class="bg-white border rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+        <section class="bg-white border-l-4 border-gray-400 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
             <h2 class="text-xl font-bold mb-4 text-[#3B4C66]">🧑‍🎓 Stagiaires</h2>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
                 <table class="min-w-full">
-                    <thead class="bg-[#3B4C66] text-white">
+                    <thead class="sticky top-0 bg-[#3B4C66] text-white z-10">
                         <tr>
                             <th class="text-left px-4 py-2">👤 Nom</th>
                             <th class="text-left px-4 py-2">🏙️ Ville</th>
@@ -66,13 +66,13 @@
     <!-- 📅 Sessions à venir -->
     <section class="bg-white border-l-4 border-green-600 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
         <h2 class="text-xl font-bold mb-4 text-green-700">📅 Sessions à venir</h2>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
             <table class="min-w-full">
-                <thead class="bg-green-700 text-white">
+                <thead class="sticky top-0 bg-green-700 text-white z-10">
                     <tr>
                         <th class="text-left px-4 py-2">📝 Nom</th>
                         <th class="text-left px-4 py-2">📆 Dates</th>
-                        <th class="text-left px-4 py-2">👥 Places</th>
+                        <th class="text-left px-4 py-2">👥 Places Réservé</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,9 +112,9 @@
     <!-- 📁 Sessions passées -->
     <section class="bg-white border-l-4 border-gray-400 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
         <h2 class="text-xl font-bold mb-4 text-gray-700">📁 Sessions passées</h2>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
             <table class="min-w-full">
-                <thead class="bg-gray-700 text-white">
+                <thead class="sticky top-0 bg-[#3B4C66] text-white z-10">
                     <tr>
                         <th class="text-left px-4 py-2">📝 Nom</th>
                         <th class="text-left px-4 py-2">📆 Dates</th>
@@ -148,11 +148,11 @@
 
 
     <!-- MODULES -->
-    <section class="bg-white border rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
+    <section class="bg-white border-l-4 border-gray-400 rounded shadow p-4 w-full md:w-[48%] xl:w-[32%]">
         <h2 class="text-xl font-bold mb-4 text-[#3B4C66]">📚 Modules</h2>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
             <table class="min-w-full">
-                <thead class="bg-[#3B4C66] text-white">
+                <thead class="sticky top-0 bg-[#3B4C66] text-white z-10">
                     <tr>
                         <th class="text-left px-4 py-2">📌 Nom</th>
                         <th class="text-left px-4 py-2">🗂️ Catégorie</th>
