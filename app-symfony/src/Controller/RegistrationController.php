@@ -27,7 +27,20 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
+            $confirmPassword = $form->get('confirmPassword')->getData();
 
+            if($plainPassword !== $confirmPassword){
+                $form->get('plainPassword')->addError(new \Symfony\Component\Form\FormError('Le mot de passe confirmé est différent.'));
+                return $this->render('registration/register.html.twig', [
+                    'registrationForm' => $form,
+                ]);
+            }
+            if(preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/', $plainPassword)){
+                $form->get('plainPassword')->addError(new \Symfony\Component\Form\FormError('Mot de passe trop faible.'));
+                return $this->render('registration/register.html.twig', [
+                    'registrationForm' => $form,
+                ]);
+            }
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 

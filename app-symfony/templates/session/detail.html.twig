@@ -11,16 +11,66 @@
         <p><strong>👥 Places :</strong> {{ session.nbPlaceReserved + session.interns|length }}/{{ session.nbPlaceTt }}</p>
     </div>
 
-    <div>
+    <div class="flex flex-col md:flex-row gap-6 h-full">
+        <!-- Liste des modules -->
+    <div class="md:w-2/3">
         <h3 class="text-xl font-semibold mb-2 text-[#3B4C66]">📚 Modules associés</h3>
-        <ul class="list-disc list-inside text-gray-700">
-            {% for programme in session.programmes %}
-                <li><a href="{{ path('detail_module', {'id': programme.module.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ programme.module.mudleName }}</a></li>
-            {% else %}
-                <li>Aucun module lié à cette session.</li>
-            {% endfor %}
-        </ul>
+        {% if session.programmes is not empty %}
+            <div class="overflow-x-auto">
+                <table class="w-full border text-left">
+                    <thead class="bg-[#3B4C66] text-white">
+                        <tr>
+                            <th class="p-2">Nom du module</th>
+                            <th class="p-2">Durée</th>
+                            <th class="p-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        {% for programme in session.programmes %}
+                            <tr class="border-b hover:bg-gray-100">
+                                <td class="p-2">
+                                    <a href="{{ path('detail_module', {'id': programme.module.id}) }}"
+                                    class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                                        {{ programme.module.mudleName }}
+                                    </a>
+                                </td>
+                                <td class="p-2">{{ programme.nbDay }} jour{% if programme.nbDay > 1 %}s{% endif %}</td>
+                                <td class="p-2">
+                                    <form method="post" action="{{ path('delete_programme', {'id': programme.id}) }}" onsubmit="return confirm('Confirmer la suppression ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ programme.id) }}">
+                                        <button class="text-red-600 hover:underline" type="submit">🗑 Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">Aucun module lié à cette session.</p>
+        {% endif %}
     </div>
+
+        <!-- Formulaire d'ajout -->
+    <div class="md:w-1/3 bg-white border rounded shadow p-4 flex flex-col justify-between flex-1">
+        <h3 class="text-lg font-semibold text-[#3B4C66] mb-3">➕ Ajouter un module</h3>
+        <form method="post" action="{{ path('add_programme', {'id': session.id}) }}" class="flex flex-col flex-1 justify-between">
+                <label for="module" class="block text-sm text-gray-700 mb-1">Module</label>
+                <select name="module" id="module" class="w-full border rounded p-2 mb-3">
+                    {% for mod in modules %}
+                        <option value="{{ mod.id }}">{{ mod.mudleName }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="nbDay" class="block text-sm text-gray-700 mb-1">Nombre de jours</label>
+                <input type="number" name="nbDay" id="nbDay" min="1" class="w-full border rounded p-2 mb-3" required>
+
+                <button type="submit" class="bg-[#3B4C66] text-white px-4 py-2 rounded hover:bg-[#4F627E] transition">Ajouter</button>
+            </form>
+        </div>
+
+    </div>
+
 
     <div>
         <h3 class="text-xl font-semibold mb-2 text-[#3B4C66]">👤 Formateur</h3>

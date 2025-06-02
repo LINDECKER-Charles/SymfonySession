@@ -18,7 +18,7 @@ class Module
     #[ORM\Column(length: 50)]
     private ?string $mudleName = null;
 
-    #[ORM\ManyToOne(inversedBy: 'modules')]
+    #[ORM\ManyToOne(inversedBy: 'modules')] 
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $module_category = null;
 

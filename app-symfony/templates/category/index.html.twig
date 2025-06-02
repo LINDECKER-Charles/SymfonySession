@@ -4,8 +4,15 @@
 
 {% block content %}
 <div class="px-4 py-8 max-w-screen-md mx-auto space-y-6">
-  <h2 class="text-2xl font-bold text-[#3B4C66] mb-4">🗂️ Liste des catégories</h2>
 
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-bold text-[#3B4C66] mb-4">🗂️ Liste des catégories</h2>
+      {% if 'ROLE_ADMIN' in app.user.roles or 'FORMATEUR' in app.user.roles %}
+      <a href="{{ path('creation_category') }}" class="inline-block bg-[#3B4C66] text-white font-semibold px-6 py-2 rounded hover:bg-[#2c3b52] transition">
+        ➕ Créer
+      </a>
+      {% endif %}
+  </div>
   <div class="bg-white shadow border rounded overflow-x-auto overflow-y-auto max-h-[60vh]">
     <table class="min-w-full text-left">
       <thead class="bg-[#3B4C66] text-white sticky top-0 z-10">

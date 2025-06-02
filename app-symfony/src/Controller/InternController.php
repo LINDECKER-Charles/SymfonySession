@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Intern;
+use App\Entity\Module;
+use App\Form\InternForm;
+use App\Form\ModuleForm;
 use App\Repository\InternRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class InternController extends AbstractController
 {
@@ -22,7 +27,27 @@ final class InternController extends AbstractController
             return $this->redirectToRoute('app_home');  
         }
     }
-    
+
+    #[Route('/stagiaire/new', name: 'new_stagiaire')]
+    public function new(Request $request, EntityManagerInterface $em): Response
+    {
+        $intern = new Intern();
+        $form = $this->createForm(InternForm::class, $intern);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($intern);
+            $em->flush();
+
+            return $this->redirectToRoute('app_intern');
+        }
+
+        return $this->render('intern/add.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+
     #[Route('/profilS/{id}', name: 'profilS')]
     public function detailUser(int $id, InternRepository $internRepository): Response
     {

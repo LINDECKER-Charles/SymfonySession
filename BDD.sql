@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS `category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `category_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.category : ~11 rows (environ)
+-- Listage des données de la table session-symfony.category : ~13 rows (environ)
 INSERT INTO `category` (`id`, `category_name`) VALUES
 	(1, 'Bureautique'),
 	(2, 'Développement Web'),
@@ -38,7 +38,9 @@ INSERT INTO `category` (`id`, `category_name`) VALUES
 	(8, 'Développement Mobile'),
 	(9, 'Design UX'),
 	(10, 'Data Science'),
-	(11, 'Agilité');
+	(11, 'Agilité'),
+	(108, 'Comment être un bon Jgl ^^'),
+	(109, 'Comment être un mauvais jgl ^^');
 
 -- Listage de la structure de table session-symfony. doctrine_migration_versions
 CREATE TABLE IF NOT EXISTS `doctrine_migration_versions` (
@@ -48,9 +50,12 @@ CREATE TABLE IF NOT EXISTS `doctrine_migration_versions` (
   PRIMARY KEY (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
--- Listage des données de la table session-symfony.doctrine_migration_versions : ~1 rows (environ)
+-- Listage des données de la table session-symfony.doctrine_migration_versions : ~4 rows (environ)
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
-	('DoctrineMigrations\\Version20250523133630', '2025-05-23 13:37:07', 155);
+	('DoctrineMigrations\\Version20250523133630', '2025-05-23 13:37:07', 155),
+	('DoctrineMigrations\\Version20250527141830', NULL, NULL),
+	('DoctrineMigrations\\Version20250602075634', NULL, NULL),
+	('DoctrineMigrations\\Version20250602081139', '2025-06-02 08:11:41', 84);
 
 -- Listage de la structure de table session-symfony. intern
 CREATE TABLE IF NOT EXISTS `intern` (
@@ -63,9 +68,9 @@ CREATE TABLE IF NOT EXISTS `intern` (
   `intern_birth` date NOT NULL,
   `intern_email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=502 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=503 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.intern : ~202 rows (environ)
+-- Listage des données de la table session-symfony.intern : ~203 rows (environ)
 INSERT INTO `intern` (`id`, `inter_name`, `intern_sex`, `intern_city`, `intern_cp`, `intern_adress`, `intern_birth`, `intern_email`) VALUES
 	(1, 'Oldroyd', 'Female', 'Verkhniy Yasenov', '13195', 'Room 1226', '1994-12-28', 'boldroyd0@statcounter.com'),
 	(2, 'Lagden', 'Female', 'Palermo', '62917', 'PO Box 18395', '2022-11-16', 'llagden1@ning.com'),
@@ -268,7 +273,8 @@ INSERT INTO `intern` (`id`, `inter_name`, `intern_sex`, `intern_city`, `intern_c
 	(199, 'Donnell', 'Female', 'Paris 10', '22598', 'PO Box 51237', '1993-03-04', 'wdonnell5i@e-recht24.de'),
 	(200, 'Marmion', 'Female', 'Bajiao', '27322', '19th Floor', '1991-06-30', 'lmarmion5j@baidu.com'),
 	(500, 'Virginie Thomas', 'Femme', 'Sainte Virginie', '48140', '104, rue de Collet', '1992-11-22', 'virginie.thomas@example.com'),
-	(501, 'Rémy Lemoine-Blin', 'Femme', 'Hamel', '42353', '4, rue Evrard', '1998-09-21', 'daniellelefebvre@noos.fr');
+	(501, 'Rémy Lemoine-Blin', 'Femme', 'Hamel', '42353', '4, rue Evrard', '1998-09-21', 'daniellelefebvre@noos.fr'),
+	(502, 'LINDECKER', 'Homme', 'Nanct', '42000', '9 rue Lothaire II', '2020-01-01', 'charles.lindecker@outlook.fr');
 
 -- Listage de la structure de table session-symfony. intern_session
 CREATE TABLE IF NOT EXISTS `intern_session` (
@@ -281,7 +287,138 @@ CREATE TABLE IF NOT EXISTS `intern_session` (
   CONSTRAINT `FK_A6D9BBE2613FECDF` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.intern_session : ~0 rows (environ)
+-- Listage des données de la table session-symfony.intern_session : ~130 rows (environ)
+INSERT INTO `intern_session` (`intern_id`, `session_id`) VALUES
+	(2, 2),
+	(2, 10),
+	(2, 25),
+	(2, 26),
+	(2, 41),
+	(3, 5),
+	(3, 10),
+	(3, 11),
+	(3, 19),
+	(3, 27),
+	(3, 41),
+	(3, 1052),
+	(4, 4),
+	(4, 15),
+	(4, 42),
+	(5, 32),
+	(5, 33),
+	(5, 40),
+	(5, 42),
+	(6, 17),
+	(6, 20),
+	(6, 21),
+	(6, 42),
+	(7, 10),
+	(7, 17),
+	(7, 27),
+	(7, 30),
+	(8, 11),
+	(8, 13),
+	(8, 21),
+	(8, 23),
+	(8, 25),
+	(8, 34),
+	(8, 39),
+	(9, 16),
+	(9, 18),
+	(9, 22),
+	(9, 26),
+	(9, 33),
+	(9, 35),
+	(10, 6),
+	(10, 11),
+	(11, 24),
+	(11, 26),
+	(11, 30),
+	(12, 6),
+	(12, 8),
+	(12, 17),
+	(12, 38),
+	(12, 1052),
+	(13, 5),
+	(13, 15),
+	(13, 22),
+	(13, 26),
+	(13, 31),
+	(13, 38),
+	(14, 37),
+	(14, 43),
+	(15, 3),
+	(15, 16),
+	(15, 22),
+	(15, 32),
+	(16, 30),
+	(16, 40),
+	(17, 40),
+	(18, 3),
+	(18, 6),
+	(18, 20),
+	(18, 23),
+	(18, 35),
+	(19, 9),
+	(19, 28),
+	(19, 36),
+	(19, 38),
+	(20, 8),
+	(20, 20),
+	(21, 8),
+	(21, 17),
+	(21, 18),
+	(21, 20),
+	(21, 22),
+	(21, 30),
+	(21, 32),
+	(21, 42),
+	(22, 10),
+	(22, 18),
+	(22, 23),
+	(22, 43),
+	(23, 10),
+	(23, 18),
+	(23, 23),
+	(23, 29),
+	(24, 3),
+	(24, 20),
+	(24, 34),
+	(24, 35),
+	(25, 11),
+	(25, 25),
+	(25, 41),
+	(26, 1),
+	(26, 26),
+	(26, 43),
+	(27, 6),
+	(27, 7),
+	(27, 17),
+	(27, 24),
+	(27, 25),
+	(28, 8),
+	(28, 12),
+	(28, 14),
+	(28, 42),
+	(29, 8),
+	(29, 29),
+	(29, 31),
+	(29, 38),
+	(30, 4),
+	(30, 18),
+	(30, 22),
+	(30, 27),
+	(30, 31),
+	(34, 6),
+	(34, 1052),
+	(34, 1053),
+	(56, 12),
+	(104, 1052),
+	(107, 12),
+	(141, 12),
+	(152, 1052),
+	(152, 1053),
+	(186, 1052);
 
 -- Listage de la structure de table session-symfony. messenger_messages
 CREATE TABLE IF NOT EXISTS `messenger_messages` (
@@ -307,10 +444,10 @@ CREATE TABLE IF NOT EXISTS `module` (
   `mudle_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_C2426289C6D9730` (`module_category_id`),
-  CONSTRAINT `FK_C2426289C6D9730` FOREIGN KEY (`module_category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=310 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `FK_C2426289C6D9730` FOREIGN KEY (`module_category_id`) REFERENCES `category` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.module : ~28 rows (environ)
+-- Listage des données de la table session-symfony.module : ~29 rows (environ)
 INSERT INTO `module` (`id`, `module_category_id`, `mudle_name`) VALUES
 	(1, 1, 'Word'),
 	(2, 1, 'Excel'),
@@ -323,14 +460,14 @@ INSERT INTO `module` (`id`, `module_category_id`, `mudle_name`) VALUES
 	(9, 2, 'Laravel'),
 	(10, 2, 'React'),
 	(11, 3, 'Figma'),
-	(12, 3, 'Adobe XD'),
+	(12, 1, 'Adobe XD'),
 	(13, 4, 'Marketing Digital'),
 	(14, 4, 'Google Ads'),
 	(15, 5, 'Docker'),
 	(16, 5, 'Kubernetes'),
 	(17, 6, 'Sécurité Windows'),
 	(18, 6, 'Gestion de pare-feu'),
-	(19, 7, 'Analyse des risques'),
+	(19, 5, 'Analyse des risques'),
 	(20, 7, 'Cryptographie'),
 	(21, 8, 'Flutter'),
 	(22, 8, 'React Native'),
@@ -339,7 +476,8 @@ INSERT INTO `module` (`id`, `module_category_id`, `mudle_name`) VALUES
 	(25, 10, 'Machine Learning'),
 	(26, 10, 'Visualisation de données'),
 	(27, 11, 'Scrum Master'),
-	(28, 6, 'Firewall & VPN');
+	(28, 5, 'Firewall & VPN'),
+	(310, 1, 'BAAHAH JGLDIFF');
 
 -- Listage de la structure de table session-symfony. programme
 CREATE TABLE IF NOT EXISTS `programme` (
@@ -350,11 +488,11 @@ CREATE TABLE IF NOT EXISTS `programme` (
   PRIMARY KEY (`id`),
   KEY `IDX_3DDCB9FF613FECDF` (`session_id`),
   KEY `IDX_3DDCB9FFAFC2B591` (`module_id`),
-  CONSTRAINT `FK_3DDCB9FF613FECDF` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_3DDCB9FFAFC2B591` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `FK_3DDCB9FF613FECDF` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`),
+  CONSTRAINT `FK_3DDCB9FFAFC2B591` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.programme : ~0 rows (environ)
+-- Listage des données de la table session-symfony.programme : ~89 rows (environ)
 INSERT INTO `programme` (`id`, `session_id`, `module_id`, `nb_day`) VALUES
 	(97, 1, 23, 3),
 	(98, 1, 28, 1),
@@ -377,8 +515,6 @@ INSERT INTO `programme` (`id`, `session_id`, `module_id`, `nb_day`) VALUES
 	(115, 9, 1, 4),
 	(116, 10, 15, 3),
 	(117, 11, 11, 5),
-	(118, 12, 17, 4),
-	(119, 12, 12, 5),
 	(120, 13, 24, 1),
 	(121, 13, 25, 4),
 	(122, 14, 9, 3),
@@ -438,7 +574,15 @@ INSERT INTO `programme` (`id`, `session_id`, `module_id`, `nb_day`) VALUES
 	(176, 42, 8, 2),
 	(177, 42, 12, 4),
 	(178, 43, 16, 4),
-	(179, 43, 25, 3);
+	(179, 43, 25, 3),
+	(182, 12, 4, 40),
+	(183, 12, 6, 10),
+	(184, 12, 9, 20),
+	(185, 12, 10, 20),
+	(186, 12, 11, 5),
+	(187, 12, 23, 2),
+	(188, 12, 24, 5),
+	(189, 12, 26, 5);
 
 -- Listage de la structure de table session-symfony. session
 CREATE TABLE IF NOT EXISTS `session` (
@@ -449,9 +593,9 @@ CREATE TABLE IF NOT EXISTS `session` (
   `nb_place_tt` int NOT NULL,
   `nb_place_reserved` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1050 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1054 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.session : ~43 rows (environ)
+-- Listage des données de la table session-symfony.session : ~47 rows (environ)
 INSERT INTO `session` (`id`, `session_name`, `start_date`, `end_date`, `nb_place_tt`, `nb_place_reserved`) VALUES
 	(1, 'Session Full Stack Web', '2024-06-01 00:00:00', '2024-07-15 00:00:00', 20, 0),
 	(2, 'Session Virtualisation', '2024-03-01 00:00:00', '2024-03-10 00:00:00', 20, 0),
@@ -495,7 +639,11 @@ INSERT INTO `session` (`id`, `session_name`, `start_date`, `end_date`, `nb_place
 	(40, 'Session Cybersécurité', '2025-11-14 00:00:00', '2025-11-24 00:00:00', 20, 2),
 	(41, 'Session NoSQL', '2024-12-17 00:00:00', '2025-01-16 00:00:00', 20, 1),
 	(42, 'Session Laravel', '2025-11-19 00:00:00', '2025-12-09 00:00:00', 20, 2),
-	(43, 'Session Symfony', '2024-07-04 00:00:00', '2024-07-12 00:00:00', 20, 8);
+	(43, 'Session Symfony', '2024-07-04 00:00:00', '2024-07-12 00:00:00', 20, 8),
+	(1050, 'Test20', '2025-05-05 00:00:00', '2025-05-30 00:00:00', 40, 3),
+	(1051, 'Test21', '2025-05-12 00:00:00', '2025-05-21 00:00:00', 10, 3),
+	(1052, 'Test24', '2025-05-05 00:00:00', '2025-05-30 00:00:00', 40, 3),
+	(1053, 'BAAHAH JGLDIFF', '2004-03-30 00:00:00', '2026-03-30 00:00:00', 50, 10);
 
 -- Listage de la structure de table session-symfony. user
 CREATE TABLE IF NOT EXISTS `user` (
@@ -511,7 +659,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `birth` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Listage des données de la table session-symfony.user : ~17 rows (environ)
 INSERT INTO `user` (`id`, `email`, `roles`, `password`, `name`, `sex`, `city`, `cp`, `adress`, `birth`) VALUES
@@ -544,7 +692,7 @@ CREATE TABLE IF NOT EXISTS `user_session` (
   CONSTRAINT `FK_8849CBDEA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table session-symfony.user_session : ~34 rows (environ)
+-- Listage des données de la table session-symfony.user_session : ~36 rows (environ)
 INSERT INTO `user_session` (`user_id`, `session_id`) VALUES
 	(1, 1),
 	(1, 2),
@@ -579,7 +727,9 @@ INSERT INTO `user_session` (`user_id`, `session_id`) VALUES
 	(14, 24),
 	(14, 25),
 	(15, 33),
-	(15, 34);
+	(15, 34),
+	(100, 1053),
+	(101, 1052);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

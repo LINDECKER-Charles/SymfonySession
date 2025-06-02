@@ -64,6 +64,18 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
                     'max' => 4096,
                 ]),
             ],
+        ])
+        ->add('confirmPassword', PasswordType::class, [
+            'mapped' => false,
+            'attr' => ['autocomplete' => 'new-password'],
+            'constraints' => [
+                new NotBlank(['message' => 'Confirmer votre mot de passe']),
+                new Length([
+                    'min' => 6,
+                    'minMessage' => 'Le mot de passe doit faire au moins {{ limit }} caractères',
+                    'max' => 4096,
+                ]),
+            ],
         ]);
 }
 

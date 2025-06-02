@@ -16,6 +16,17 @@ class ModuleRepository extends ServiceEntityRepository
         parent::__construct($registry, Module::class);
     }
 
+        
+    public function findByNotInCategory(int $categoryId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.module_category != :categoryId OR m.module_category IS NULL')
+            ->setParameter('categoryId', $categoryId)
+            ->orderBy('m.mudleName', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Module[] Returns an array of Module objects
     //     */

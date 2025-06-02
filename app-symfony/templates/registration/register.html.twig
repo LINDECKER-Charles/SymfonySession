@@ -58,6 +58,12 @@
         label_attr: { class: 'block mb-1 text-sm font-medium text-gray-700' }
       }) }}
 
+      {{ form_row(registrationForm.confirmPassword, {
+        label: 'Confirmer mot de passe',
+        attr: { class: 'w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#3B4C66]' },
+        label_attr: { class: 'block mb-1 text-sm font-medium text-gray-700' }
+      }) }}
+
       <div class="flex items-center space-x-2">
         {{ form_widget(registrationForm.agreeTerms) }}
         {{ form_label(registrationForm.agreeTerms, null, {

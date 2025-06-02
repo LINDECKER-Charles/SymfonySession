@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %} 
+{% block title %}{{ editMode ? 'Modifier' : 'Ajouter' }} un module{% endblock %}
+{% block content %} 
+    <div class="max-w-xl mx-auto bg-white p-6 shadow rounded"> 
+        <h1 class="text-2xl font-bold text-[#3B4C66] mb-4">
+             ➕{{ editMode ? ' Modifier' : ' Ajouter ' }} un module
+
+        </h1>
+         {{ form_start(form) }} 
+         <div class="mb-4"> 
+            {{ form_label(form.mudleName, 'Nom du module', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }} 
+            {{ form_widget(form.mudleName, {'attr': {'class': 'mt-1 block w-full border rounded p-2'}}) }} {{ form_errors(form.mudleName) }} 
+        </div> 
+        <div class="mb-4"> 
+            {{ form_label(form.module_category, 'Catégorie', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }} 
+            {{ form_widget(form.module_category, {'attr': {'class': 'mt-1 block w-full border rounded p-2'}}) }} 
+            {{ form_errors(form.module_category) }} </div> 
+            <button type="submit" class="bg-[#3B4C66] text-white px-4 py-2 rounded hover:bg-[#4F627E] transition"> Enregistrer 
+
+            </button> {{ form_end(form) }} 
+        </div> 
+{% endblock %}

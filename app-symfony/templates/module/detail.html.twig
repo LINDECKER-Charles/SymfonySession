@@ -5,9 +5,32 @@
 {% block content %}
 <div class="px-4 py-8 max-w-screen-md mx-auto bg-white shadow rounded border border-gray-200 space-y-6">
     <h2 class="text-2xl font-bold text-[#3B4C66]">📘 {{ module.mudleName }}</h2>
+    <a href="{{ path('form_module', {'id': module.id}) }}"
+   class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+    ✏️ Modifier
+    </a>
 
     <div class="text-gray-700">
-        <p><strong>📁 Catégorie :</strong> <a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.moduleCategory.categoryName }}</a></p>
+        <p><strong>📁 Catégorie :</strong></p>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            <form method="post" action="{{ path('assign_category_to_module', {'id': module.id}) }}">
+                <select name="categoryId" class="border px-2 py-1 rounded shadow text-gray-700">
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if module.moduleCategory and module.moduleCategory.id == cat.id %}selected{% endif %}>
+                            {{ cat.categoryName }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">💾</button>
+            </form>
+        {% else %}
+            {% if module.moduleCategory %}
+                <p>{{ module.moduleCategory.categoryName }}</p>
+            {% else %}
+                <p class="text-gray-500 italic">Non assignée</p>
+            {% endif %}
+        {% endif %}
+
     </div>
 
     <div>

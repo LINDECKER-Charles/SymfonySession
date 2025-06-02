@@ -4,7 +4,15 @@
 
 {% block content %}
 <div class="p-8">
-  <h1 class="text-2xl font-bold text-[#3B4C66] mb-6">📚 Modules</h1>
+
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-bold text-[#3B4C66] mb-6">📚 Modules</h2>
+      {% if 'ROLE_ADMIN' in app.user.roles or 'FORMATEUR' in app.user.roles %}
+      <a href="{{ path('form_module') }}" class="inline-block bg-[#3B4C66] text-white font-semibold px-6 py-2 rounded hover:bg-[#2c3b52] transition">
+        ➕ Créer
+      </a>
+      {% endif %}
+  </div>
 
   <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
     <table class="min-w-full bg-white border shadow rounded">
@@ -18,7 +26,12 @@
         {% for module in modules %}
           <tr class="border-t">
             <td class="px-4 py-2"><a href="{{ path('detail_module', {'id': module.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.mudleName }}</a></td>
-            <td class="px-4 py-2"><a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.moduleCategory.categoryName }}</a></td>
+            {% if module.moduleCategory %}
+                <td class="px-4 py-2"><a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.moduleCategory.categoryName }}</a></td>
+            {% else %}
+                <span class="text-gray-500 italic">Aucune catégorie</span>
+            {% endif %}
+
           </tr>
         {% else %}
           <tr>

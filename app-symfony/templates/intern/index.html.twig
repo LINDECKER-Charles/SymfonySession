@@ -5,8 +5,15 @@
 
 {% block content %}
 <div class="p-8">
-  <h1 class="text-2xl font-bold text-[#3B4C66] mb-6">🧑‍🎓 Stagiaires</h1>
 
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-bold text-[#3B4C66] mb-6">🧑‍🎓 Stagiaires</h2>
+      {% if 'ROLE_ADMIN' in app.user.roles or 'FORMATEUR' in app.user.roles %}
+      <a href="{{ path('new_stagiaire') }}" class="inline-block bg-[#3B4C66] text-white font-semibold px-6 py-2 rounded hover:bg-[#2c3b52] transition">
+        ➕ Créer
+      </a>
+      {% endif %}
+  </div>
   <div class="overflow-x-auto overflow-y-auto max-h-[60vh]">
     <table class="min-w-full bg-white border shadow rounded">
       <thead class="bg-[#3B4C66] text-white sticky top-0 z-10">
