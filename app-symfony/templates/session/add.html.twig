@@ -8,13 +8,13 @@
 
     {{ form_start(form, {'attr': {'class': 'space-y-4'}}) }}
 
-    {% for label, messages in app.flashes %}
-    {% for message in messages %}
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-2">
-        {{ message }}
-        </div>
-    {% endfor %}
-    {% endfor %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+        {% for error in form.vars.errors %}
+        <p>{{ error.message }}</p>
+        {% endfor %}
+    </div>
+
+
 
 
     <div class="space-y-4">
