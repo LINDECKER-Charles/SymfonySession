@@ -52,6 +52,20 @@ final class SessionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $existing = $sessionRepository->findOneBy(['sessionName' => $session->getSessionName()]);
 
+            if($session->getNbPlaceTt() < 0 || $session->getNbPlaceReserved() < 0){
+                $this->addFlash('error', 'Place negative impossible');
+/*                 return $this->render('session/add.html.twig', [
+                    'form' => $form->createView(),
+                ]); */
+                return $this->redirectToRoute('creation_session');
+            }
+            if($session->getNbPlaceTt() < $session->getNbPlaceReserved()){
+                $this->addFlash('warning', 'Place max < place réservé impossible');
+               /*  return $this->render('session/add.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+                return $this->redirectToRoute('creation_session'); */
+            }
             if ($existing) {
                 $form->addError(new FormError('Session déjà existante'));
             } else {
