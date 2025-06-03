@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Module;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<Module>
@@ -25,6 +26,16 @@ class ModuleRepository extends ServiceEntityRepository
             ->orderBy('m.mudleName', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+    public function findTtDays(EntityManagerInterface $entityManager, int $sessionId): int
+    {
+        $qb = $entityManager->createQuery(
+            'SELECT SUM(p.nbDay)
+            FROM App\Entity\Programme p
+            WHERE p.session = :sessionId'
+        )->setParameter('sessionId', $sessionId);
+
+        return (int) $qb->getSingleScalarResult();
     }
 
     //    /**

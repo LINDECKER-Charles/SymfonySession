@@ -52,19 +52,12 @@ final class SessionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $existing = $sessionRepository->findOneBy(['sessionName' => $session->getSessionName()]);
 
-            if($session->getNbPlaceTt() < 0 || $session->getNbPlaceReserved() < 0){
-                $this->addFlash('error', 'Place negative impossible');
-/*                 return $this->render('session/add.html.twig', [
-                    'form' => $form->createView(),
-                ]); */
-                return $this->redirectToRoute('creation_session');
-            }
-            if($session->getNbPlaceTt() < $session->getNbPlaceReserved()){
-                $form->addError(new FormError('Erreur personnalisée'));
+            if (($session->getNbPlaceReserved() > $session->getNbPlaceTt()) || ($session->getNbPlaceTt() < 0 || $session->getNbPlaceReserved() < 0) || $session->getStartDate() > $session->getEndDate()) {
                 return $this->render('session/add.html.twig', [
                     'form' => $form->createView(),
                 ]);
             }
+
             if ($existing) {
                 $form->addError(new FormError('Session déjà existante'));
             } else {
@@ -81,9 +74,26 @@ final class SessionController extends AbstractController
 
         return $this->render('session/add.html.twig', [
             'form' => $form->createView(),
+            'editMode' => false,
         ]);
     }
 
+    #[Route('/session/edit/{id}', name: 'edit_session')]
+    public function edit(Session $session, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(SessionForm::class, $session);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            return $this->redirectToRoute('detail_module', ['id' => $session->getId()]);
+        }
+
+        return $this->render('session/add.html.twig', [
+            'form' => $form,
+            'editMode' => true,
+        ]);
+    }
 
     #[Route('/session/{id}', name: 'detail_session')]public function detailSession(int $id, SessionRepository $sessionRepository, InternRepository $internRepository, ModuleRepository $moduleRepository): Response
     {
@@ -112,11 +122,20 @@ final class SessionController extends AbstractController
     public function addProgramme(
         Request $request,
         Session $session,
+        SessionRepository $sessionRepository,
         ModuleRepository $moduleRepository,
         EntityManagerInterface $em
     ): Response {
         $moduleId = $request->request->get('module');
         $nbDay = $request->request->get('nbDay');
+
+        $maxDay = $session->getStartDate()->diff($session->getEndDate())->days;
+        $ttModule = $moduleRepository->findTtDays($em, $session->getId());
+
+        if(($maxDay - $nbDay - $ttModule) < 0){
+            $this->addFlash('error', 'Nombre de jour total de la session dépassé');
+            return $this->redirectToRoute('detail_session', ['id' => $session->getId()]);
+        }
 
         if (!$moduleId || !$nbDay) {
             $this->addFlash('error', 'Module ou nombre de jours manquant.');
@@ -129,13 +148,27 @@ final class SessionController extends AbstractController
             return $this->redirectToRoute('detail_session', ['id' => $session->getId()]);
         }
 
-        $programme = new Programme();
-        $programme->setSession($session);
-        $programme->setModule($module);
-        $programme->setNbDay((int)$nbDay);
+        $existingProgramme = $em->getRepository(Programme::class)->findOneBy([
+            'session' => $session,
+            'module' => $module,
+        ]);
 
-        $em->persist($programme);
-        $em->flush();
+        if ($existingProgramme) {
+            // On additionne la durée
+            $existingProgramme->setNbDay($existingProgramme->getNbDay() + (int) $nbDay);
+            $this->addFlash('info', 'Durée du module mise à jour dans la session.');
+            $em->flush();
+        } else {
+            // Nouveau programme
+            $programme = new Programme();
+            $programme->setSession($session);
+            $programme->setModule($module);
+            $programme->setNbDay((int)$nbDay);
+
+            $em->persist($programme);
+            $em->flush();
+            $this->addFlash('success', 'Module ajouté à la session.');
+        }
 
         return $this->redirectToRoute('detail_session', ['id' => $session->getId()]);
     }
