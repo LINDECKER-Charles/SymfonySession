@@ -11,11 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Psr\Log\LoggerInterface;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ParameterBagInterface $params, LoggerInterface $logger): Response
     {
         if ($this->getUser()){
             return $this->redirectToRoute('app_home');
@@ -23,8 +25,15 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
         $form->handleRequest($request);
+
+        
         
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!empty($form->get('honeytrap')->getData())) {
+                // probable bot
+                $logger->info('Tentative spam détectée via honeypot.');
+                return $this->redirectToRoute('app_register');
+            }
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
             $confirmPassword = $form->get('confirmPassword')->getData();
@@ -54,6 +63,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'recaptcha_site_key' => $params->get('karser_recaptcha3.site_key'),
         ]);
     }
 }

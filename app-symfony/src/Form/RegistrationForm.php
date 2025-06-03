@@ -14,6 +14,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class RegistrationForm extends AbstractType
 {
@@ -75,6 +77,20 @@ public function buildForm(FormBuilderInterface $builder, array $options): void
                     'minMessage' => 'Le mot de passe doit faire au moins {{ limit }} caractères',
                     'max' => 4096,
                 ]),
+            ],
+        ])
+        ->add('captcha', Recaptcha3Type::class, [
+            'constraints' => new Recaptcha3(),
+            'action_name' => 'nom_action',
+        ])
+        ->add('honeytrap', TextType::class, [
+            'mapped' => false,
+            'required' => false,
+            'attr' => [
+                'autocomplete' => 'off',
+                'tabindex' => -1,
+                'aria-hidden' => 'true',
+                'style' => 'position:absolute;left:-9999px;', // ou display:none si tu veux
             ],
         ]);
 }
