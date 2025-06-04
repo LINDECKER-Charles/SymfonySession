@@ -101,8 +101,9 @@
                                     {{ intern.interName }}
                                 </a>
                                 <span class="text-gray-600 ml-2">– {{ intern.internCity }}</span>
+                                {# On défini le chemin vers le PDF(en suposant qu'il existe) #}
                                 {% set pdfPath = 'pdfs/' ~ intern.interName|replace({' ': '_'}) ~ '_' ~ session.sessionName|replace({' ': '_'}) ~ '_diplome.pdf' %}
-                                {% if (file_exists(pdfPath)) %}
+                                {% if (file_exists(pdfPath)) %} {# S'il existe on affiche le button #}
                                     <a href="{{ asset(pdfPath) }}" download target="_blank" class="ml-4 text-sm text-blue-600 hover:underline">
                                         📄 Voir PDF
                                     </a>

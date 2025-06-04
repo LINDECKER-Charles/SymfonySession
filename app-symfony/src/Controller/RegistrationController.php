@@ -16,6 +16,19 @@ use Psr\Log\LoggerInterface;
 
 class RegistrationController extends AbstractController
 {
+    /**
+     * Gère l'enregistrement d'un nouvel utilisateur.
+     * Vérifie le honeypot, la correspondance et la robustesse du mot de passe.
+     * Connecte automatiquement l'utilisateur après inscription.
+     *
+     * @param Request $request Requête HTTP contenant les données du formulaire.
+     * @param UserPasswordHasherInterface $userPasswordHasher Service de hachage de mot de passe.
+     * @param Security $security Service de sécurité pour la connexion automatique.
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités Doctrine.
+     * @param ParameterBagInterface $params Accès aux paramètres de configuration.
+     * @param LoggerInterface $logger Logger pour détecter un spam via honeypot.
+     * @return Response
+     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ParameterBagInterface $params, LoggerInterface $logger): Response
     {

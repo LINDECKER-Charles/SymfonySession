@@ -9,6 +9,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class LogController extends AbstractController
 {
+    /**
+     * Affiche les lignes du fichier de log contenant une tentative de spam détectée via le honeypot.
+     *
+     * @return Response
+     */
     #[Route('/logs', name: 'logs')]
     public function show(): Response
     {

@@ -15,7 +15,17 @@ use App\Entity\User;
 final class HomeController extends AbstractController
 {
 
-
+    /**
+     * Affiche la page d’accueil selon le rôle :
+     * - Admin : toutes les entités (modules, users, stagiaires, sessions).
+     * - Autre utilisateur : ses sessions et modules associés.
+     *
+     * @param ModuleRepository $moduleRepository
+     * @param InternRepository $internRepository
+     * @param UserRepository $userRepository
+     * @param SessionRepository $sessionRepository
+     * @return Response
+     */
     #[Route('/home', name: 'app_home')]
     public function index(ModuleRepository $moduleRepository, InternRepository $internRepository, UserRepository $userRepository,  SessionRepository $sessionRepository): Response
     {
@@ -56,6 +66,11 @@ final class HomeController extends AbstractController
         } 
         /* dd($re->getSession()); */
     }
+    /**
+     * Redirige vers la route de la page d’accueil.
+     *
+     * @return Response
+     */
     #[Route('/', name: 'redirect_home')]
     public function redirectHome(): Response
     {

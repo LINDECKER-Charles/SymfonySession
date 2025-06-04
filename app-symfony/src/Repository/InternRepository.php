@@ -15,7 +15,12 @@ class InternRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Intern::class);
     }
-
+    /**
+     * Récupère les stagiaires qui ne sont pas inscrits à une session donnée.
+     *
+     * @param int $sessionId ID de la session à exclure.
+     * @return array Liste des stagiaires non présents dans cette session.
+     */
     public function findByNotInSession(int $sessionId): array
     {
         /* Création de la requet principale */

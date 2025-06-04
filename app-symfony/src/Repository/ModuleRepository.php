@@ -17,7 +17,12 @@ class ModuleRepository extends ServiceEntityRepository
         parent::__construct($registry, Module::class);
     }
 
-        
+    /**
+     * Récupère les modules qui ne sont pas liés à une catégorie donnée ou qui n'ont pas de catégorie.
+     *
+     * @param int $categoryId ID de la catégorie à exclure.
+     * @return array Liste des modules hors de cette catégorie.
+     */
     public function findByNotInCategory(int $categoryId): array
     {
         return $this->createQueryBuilder('m')
@@ -27,6 +32,13 @@ class ModuleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    /**
+     * Calcule le total des jours de tous les programmes associés à une session donnée.
+     *
+     * @param EntityManagerInterface $entityManager Le gestionnaire d'entités Doctrine.
+     * @param int $sessionId L’ID de la session concernée.
+     * @return int Somme totale des jours pour la session.
+     */
     public function findTtDays(EntityManagerInterface $entityManager, int $sessionId): int
     {
         $qb = $entityManager->createQuery(

@@ -16,6 +16,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ModuleController extends AbstractController
 {
+    /**
+     * Affiche tous les modules.
+     *
+     * @param ModuleRepository $moduleRepository
+     * @return Response
+     */
     #[Route('/module', name: 'app_module')]
     public function index(ModuleRepository $moduleRepository): Response
     {
@@ -24,7 +30,15 @@ final class ModuleController extends AbstractController
             'modules' => $modules,
         ]);
     } 
-
+    /**
+     * Crée ou modifie un module selon la présence d'un ID.
+     *
+     * @param Module|null $module
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param ModuleRepository $repo
+     * @return Response
+     */
     #[Route('/module/{id?0}/form', name: 'form_module')]
     public function formModule(Module $module = null, Request $request, EntityManagerInterface $em, ModuleRepository $repo): Response
     {
@@ -63,7 +77,14 @@ final class ModuleController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Édite un module existant.
+     *
+     * @param Module $module
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/module/edit/{id}', name: 'edit_module')]
     public function edit(Module $module, Request $request, EntityManagerInterface $em): Response
     {
@@ -80,7 +101,14 @@ final class ModuleController extends AbstractController
             'editMode' => true,
         ]);
     }
-
+    /**
+     * Affiche le détail d'un module et toutes les catégories.
+     *
+     * @param ModuleRepository $moduleRepository
+     * @param int $id
+     * @param CategoryRepository $categoryRepository
+     * @return Response
+     */
     #[Route('/module/assign-category/{id}', name: 'assign_category_to_module', methods: ['POST'])]
     public function assignCategoryToModule(
         Module $module,
@@ -98,7 +126,12 @@ final class ModuleController extends AbstractController
 
         return $this->redirectToRoute('detail_module', ['id' => $module->getId()]);
     }
-
+    /**
+     * Affiche toutes les catégories.
+     *
+     * @param CategoryRepository $categoryRepository
+     * @return Response
+     */
     #[Route('/module/{id}/', name: 'detail_module')]
     public function moduleDetail(ModuleRepository $moduleRepository, int $id, CategoryRepository $categoryRepository): Response
     {
@@ -117,7 +150,14 @@ final class ModuleController extends AbstractController
             'categorys' => $categorys,
         ]);
     } 
-
+/**
+ * Crée une nouvelle catégorie si elle n'existe pas déjà.
+ *
+ * @param Request $request
+ * @param EntityManagerInterface $entityManager
+ * @param CategoryRepository $categoryRepository
+ * @return Response
+ */
     #[Route('/creationCategory', name: 'creation_category')]
     public function creationCategory(Request $request, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
     {
@@ -147,6 +187,14 @@ final class ModuleController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le détail d'une catégorie et les modules non liés à celle-ci.
+     *
+     * @param CategoryRepository $categoryRepository
+     * @param ModuleRepository $moduleRepository
+     * @param int $id
+     * @return Response
+     */
     
     #[Route('/category/{id}/', name: 'detail_category')]
     public function categoryDetail(CategoryRepository $categoryRepository, ModuleRepository $moduleRepository, int $id): Response

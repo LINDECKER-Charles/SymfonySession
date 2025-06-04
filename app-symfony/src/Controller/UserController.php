@@ -10,6 +10,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController
 {
+    /**
+     * Affiche la liste des utilisateurs si l'utilisateur connecté est admin.
+     *
+     * @param UserRepository $userRepository Le repository des utilisateurs.
+     * @return Response Vue avec tous les utilisateurs ou redirection.
+     */
     #[Route('/user', name: 'app_user')]
     public function index(UserRepository $userRepository): Response
     {
@@ -23,6 +29,14 @@ final class UserController extends AbstractController
         } 
     }
 
+    /**
+     * Affiche le profil détaillé d’un utilisateur selon son ID.
+     * Redirige vers la connexion si aucun utilisateur n’est connecté.
+     *
+     * @param int $id ID de l'utilisateur à afficher.
+     * @param UserRepository $userRepository Le repository des utilisateurs.
+     * @return Response Vue du profil utilisateur ou redirection vers login.
+     */
     #[Route('/profil/{id}', name: 'profil')]
     public function detailUser(int $id, UserRepository $userRepository): Response
     {

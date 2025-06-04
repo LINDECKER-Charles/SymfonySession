@@ -9,6 +9,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * Affiche la page de connexion et gère les erreurs éventuelles.
+     *
+     * @param AuthenticationUtils $authenticationUtils Utilitaire pour gérer l'authentification.
+     * @return Response
+     */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -26,7 +32,11 @@ class SecurityController extends AbstractController
             'error' => $error,
         ]);
     }
-
+    /**
+     * Méthode de déconnexion (interceptée par le firewall, ne doit pas contenir de logique).
+     *
+     * @throws \LogicException
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

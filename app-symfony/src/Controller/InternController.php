@@ -15,6 +15,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class InternController extends AbstractController
 {
+    /**
+     * Affiche la liste des stagiaires si l'utilisateur est admin.
+     *
+     * @param InternRepository $internRepository
+     * @return Response
+     */
     #[Route('/intern', name: 'app_intern')]
     public function index(InternRepository $internRepository): Response
     {
@@ -27,7 +33,13 @@ final class InternController extends AbstractController
             return $this->redirectToRoute('app_home');  
         }
     }
-
+    /**
+     * Crée un nouveau stagiaire via un formulaire.
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/stagiaire/new', name: 'new_stagiaire')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
@@ -47,7 +59,14 @@ final class InternController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Affiche le profil d'un stagiaire avec ses sessions associées.
+     * Redirige vers la connexion si l'utilisateur n'est pas connecté.
+     *
+     * @param int $id
+     * @param InternRepository $internRepository
+     * @return Response
+     */
     #[Route('/profilS/{id}', name: 'profilS')]
     public function detailUser(int $id, InternRepository $internRepository): Response
     {
