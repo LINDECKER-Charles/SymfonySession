@@ -96,24 +96,42 @@
                 <ul class="list-disc list-inside text-gray-700">
                     {% for intern in interns %}
                         <li class="flex items-center justify-between bg-gray-50 px-4 py-2 rounded shadow-sm mb-2">
-                        <div>
-                            <a href="{{ path('profilS', {'id': intern.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
-                            {{ intern.interName }}
-                            </a>
-                            <span class="text-gray-600 ml-2">– {{ intern.internCity }}</span>
-                        </div>
-                        {% if 'ROLE_ADMIN' in app.user.roles or session.users.contains(app.user) %}
-                            <a href="{{ path('del_intern', {'idI': intern.id, 'idS': session.id}) }}"
-                            class="bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded shadow inline-flex items-center transition duration-200">
-                            ❌
-                            </a>
-                        {% endif %}
+                            <div>
+                                <a href="{{ path('profilS', {'id': intern.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                                    {{ intern.interName }}
+                                </a>
+                                <span class="text-gray-600 ml-2">– {{ intern.internCity }}</span>
+                                {% set pdfPath = 'pdfs/' ~ intern.interName|replace({' ': '_'}) ~ '_' ~ session.sessionName|replace({' ': '_'}) ~ '_diplome.pdf' %}
+                                {% if (file_exists(pdfPath)) %}
+                                    <a href="{{ asset(pdfPath) }}" download target="_blank" class="ml-4 text-sm text-blue-600 hover:underline">
+                                        📄 Voir PDF
+                                    </a>
+                                {% endif %}
+                            </div>
+                            {% if 'ROLE_ADMIN' in app.user.roles or session.users.contains(app.user) %}
+                                <a href="{{ path('del_intern', {'idI': intern.id, 'idS': session.id}) }}"
+                                class="bg-red-300 hover:bg-red-400 text-white font-bold py-1 px-3 rounded shadow inline-flex items-center transition duration-200">
+                                ❌
+                                </a>
+                            {% endif %}
                         </li>
                     {% else %}
                         <li>Aucun stagiaire inscrit.</li>
                     {% endfor %}
                 </ul>
+
             </div>
+                {% if interns is not null %}
+                    <div class="mt-4 flex justify-end">
+                        <a href="{{ path('generate_pdf_session', {'id': session.id}) }}"
+                        class="inline-flex items-center gap-2 bg-[#3B4C66] text-white font-semibold px-4 py-2 rounded-lg shadow hover:bg-[#2c3b52] transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11V3m0 0L8 7m4-4l4 4M6 21h12M6 21v-2a2 2 0 012-2h8a2 2 0 012 2v2" />
+                            </svg>
+                            Télécharger les certificats PDF
+                        </a>
+                    </div>
+                {% endif %}
         </div>
 
         <div class="w-full md:w-1/2 bg-white border rounded shadow p-4">

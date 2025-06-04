@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Session;
 use App\Entity\Programme;
 use App\Form\SessionForm;
+use App\Service\PdfService;
 use App\Repository\UserRepository;
 use App\Repository\InternRepository;
 use App\Repository\ModuleRepository;
@@ -219,4 +220,55 @@ final class SessionController extends AbstractController
 
         return $this->redirectToRoute('detail_session', ['id' => $idS]);
     }
+
+    #[Route('/session/generate/{id}', name: 'generate_pdf_session')]
+    public function generatePdfSession(int $id, SessionRepository $sessionRepository, PdfService $pdfServic, ModuleRepository $moduleRepository, EntityManagerInterface $em): Response
+    {
+        if (!($this->getUser() && (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())))) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        $session = $sessionRepository->find($id);
+        $interns = $session->getInterns();
+        $programmes = $session->getProgrammes();
+
+        foreach($interns as $intern){
+            $html = '
+                <style>
+                    body { font-family: Arial, sans-serif; font-size: 12px; }
+                    h1 { color: #3B4C66; text-align: center; }
+                    .section { margin-bottom: 20px; }
+                    .label { font-weight: bold; }
+                    ul { padding-left: 20px; }
+                </style>
+
+                <h1>Attestation de Formation</h1>
+
+                <div class="section">
+                    <p><span class="label">Nom du stagiaire :</span> ' . $intern->getInterName() . '</p>
+                    <p><span class="label">Formation :</span> ' . $session->getSessionName() . '</p>
+                    <p><span class="label">Durée :</span> ' . $session->getStartDate()->format('d/m/Y') . ' au ' . $session->getEndDate()->format('d/m/Y') . '</p>
+                    <p><span class="label">Total jours :</span> ' . $moduleRepository->findTtDays($em, $id) . ' jours</p>
+                </div>
+
+                <div class="section">
+                    <p><span class="label">Contenu de la formation :</span></p>
+                    <ul>';
+                foreach ($programmes as $module) {
+                        $html .= '<li>' . $module->getModule()->getMudleName() . ' – ' . $module->getNbDay() . ' jour(s)</li>';
+                    }
+                $html .= '
+                    </ul>
+                </div>
+
+                <p style="text-align:right;">Fait le ' . date('d/m/Y') . '</p>
+                ';
+
+            $pdfServic->generatePdf($html, $intern->getInterName(), $session->getSessionName());
+        }
+
+        return $this->redirectToRoute('detail_session', ['id' => $id]);
+    }
+
+
 }

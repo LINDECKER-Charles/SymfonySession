@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Log {% endblock %}
+
+
+{% block content %}
+    {% if app.user is null %}
+        <p>Utilisateur non connecté</p>
+    {% else %}
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            <h1 class="text-2xl font-bold text-[#3B4C66] mb-4">🕷️ Logs Honeypot</h1>
+            <ul class="space-y-2">
+                {% for log in logs %}
+                    <li class="bg-gray-100 border border-gray-300 p-4 rounded shadow text-sm whitespace-pre-wrap break-words">
+                        {{ log }}
+                    </li>
+                {% else %}
+                    <li class="text-gray-500 italic">Aucun log détecté.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
