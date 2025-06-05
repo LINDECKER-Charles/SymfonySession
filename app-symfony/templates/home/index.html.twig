@@ -5,16 +5,6 @@
 {% block content %}
     {% if 'ROLE_ADMIN' in app.user.roles or 'FORMATEUR' in app.user.roles %}
         <div class="w-full max-w-6xl mx-auto bg-white border border-gray-200 rounded-lg shadow p-4 mb-6" id="calendar"></div>
-        <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: '/events', // route Symfony qui retourne un JSON
-            });
-            calendar.render();
-        });
-        </script> 
     {% endif %}
 <div class="flex flex-wrap justify-center gap-6 px-4 py-8 max-w-screen-xl mx-auto">
     {% if 'ROLE_ADMIN' in app.user.roles %}
@@ -185,6 +175,5 @@
             </table>
         </div>
     </section>
-
-</div>
+    </div>
 {% endblock %}
