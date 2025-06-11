@@ -120,4 +120,69 @@ final class HomeController extends AbstractController
         'sessions' => $sessionResults
     ]);
     }
+
+    #[Route('/recherche', name: 'app_recherche')]
+    public function recherche(UserRepository $userRepository,  SessionRepository $sessionRepository): Response
+    {
+        $users = $userRepository->findAll();
+        $sessions = $sessionRepository->findAll();
+        return $this->render('home/recherche.html.twig', [
+            'users' => $users,
+            'sessions' => $sessions
+        ]);   
+    }
+
+    #[Route('/recherche/{param}', name: 'app_recherche_ajax')]
+    public function rechercheAjax(string $param, UserRepository $userRepository, SessionRepository $sessionRepository): JsonResponse
+    {
+        $data = json_decode($param, true);
+        $search = strtolower(trim($data['search'] ?? ''));
+        $utilisateurs = $data['utilisateurs'] ?? false;
+        $sessions = $data['sessions'] ?? false;
+        $ordre = ($data['ordre'] ?? true) ? 'ASC' : 'DESC';
+        $max = $data['maxRes'] ?? 100;
+
+
+        $results = [];
+
+        if ($utilisateurs) {
+            $users = $userRepository->createQueryBuilder('u')
+                ->where('LOWER(u.name) LIKE :search')
+                ->orderBy('u.name', $ordre)
+                ->setParameter('search', $search . '%')
+                ->setMaxResults($max)
+                ->getQuery()
+                ->getResult();
+
+            foreach ($users as $u) {
+                $results[] = [
+                    'type' => 'user',
+                    'id' => $u->getId(),
+                    'name' => $u->getName(),
+                    'email' => $u->getEmail(),
+                ];
+            }
+        }
+
+        if ($sessions) {
+            $sessions = $sessionRepository->createQueryBuilder('s')
+                ->where('LOWER(s.sessionName) LIKE :search')
+                ->orderBy('s.sessionName', $ordre)
+                ->setParameter('search', $search . '%')
+                ->setMaxResults($max)
+                ->getQuery()
+                ->getResult();
+
+            foreach ($sessions as $s) {
+                $results[] = [
+                    'type' => 'session',
+                    'id' => $s->getId(),
+                    'name' => $s->getSessionName(),
+                    'places' => ($s->getNbPlaceReserved() + count($s->getInterns())) . '/' . $s->getNbPlaceTt()
+                ];
+            }
+        }
+
+        return new JsonResponse($results);
+    }
 }

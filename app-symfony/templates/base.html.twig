@@ -95,12 +95,12 @@
         </h1>
         {# Barre de Recherche #}
         <div class="w-full max-w-md relative">
-            {% if 'ROLE_ADMIN' in app.user.roles or 'FORMATEUR' in app.user.roles %}
-                <script src="{{ asset('js/findBarre.js') }}" defer></script>
-            {% endif %}
+        {% if app.user %}
+            <script src="{{ asset('js/findBarre.js') }}" defer></script>
+        {% endif %}
             <input id="search" type="text" placeholder="Recherche..."
                    class="w-full pl-10 pr-4 py-2 rounded bg-white text-[#1F2937] shadow-sm ring-1 ring-gray-300 focus:outline-none focus:ring-[#3B4C66] transition" />
-            <span class="absolute left-3 top-2.5 text-[#3B4C66]">🔍</span>
+            <span class="absolute left-3 top-1.5 text-[#3B4C66] text-xl"><a href="{{ path('app_recherche') }}" >🔍</a></span>
         </div>
     {# Affichage des vues #}
     </header>
