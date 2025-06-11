@@ -1,13 +1,22 @@
 document.addEventListener("turbo:load", function () {
+
+    /**
+     * On recupère 
+     * -les inputs
+     * -la div de resultat
+     * -le loader
+     */
     const inputs = document.querySelectorAll("input");
     const searchInput = document.querySelector('input[name="search"]');
     const container = document.querySelector("#resultats");
     const loader = document.getElementById("loader");
 
+    /* On initialise le timer et le controller */
     let typingTimer;
     const delay = 800;
     let controller;
 
+    /* Pour chaque input dans le filtre */
     inputs.forEach(input => {
         input.addEventListener("input", () => {
             clearTimeout(typingTimer);
@@ -16,6 +25,7 @@ document.addEventListener("turbo:load", function () {
                 controller = new AbortController();
                 const signal = controller.signal;
 
+                /* On charge les paramètres */
                 const params = {
                     utilisateurs: document.querySelector('input[value="users"]').checked,
                     sessions: document.querySelector('input[value="sessions"]').checked,
@@ -24,8 +34,10 @@ document.addEventListener("turbo:load", function () {
                     search: searchInput?.value.trim() || ''
                 };
 
+                
                 const url = `/recherche/${encodeURIComponent(JSON.stringify(params))}`;
 
+                /* On active le loader et modifie l'opacité de la div */
                 loader.classList.remove("hidden");
                 container.classList.add("opacity-50", "pointer-events-none");
 

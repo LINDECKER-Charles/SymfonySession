@@ -120,23 +120,40 @@ final class HomeController extends AbstractController
         'sessions' => $sessionResults
     ]);
     }
-
+    /**
+     * Affiche la page de recherche avec les sessions et utilisateurs.
+     *
+     * @param UserRepository $userRepository Le repository des utilisateurs.
+     * @param SessionRepository $sessionRepository Le repository des sessions.
+     * @return Response La vue twig contenant les résultats initiaux.
+     */
     #[Route('/recherche', name: 'app_recherche')]
     public function recherche(UserRepository $userRepository,  SessionRepository $sessionRepository): Response
     {
+        /* On récupère touts les utilisateurs et sessions */
         $users = $userRepository->findAll();
         $sessions = $sessionRepository->findAll();
+
         return $this->render('home/recherche.html.twig', [
             'users' => $users,
             'sessions' => $sessions
         ]);   
     }
-
+    /**
+     * Effectue une recherche AJAX filtrée sur les utilisateurs et sessions.
+     *
+     * @param string $param Les paramètres JSON encodés dans l’URL.
+     * @param UserRepository $userRepository Le repository des utilisateurs.
+     * @param SessionRepository $sessionRepository Le repository des sessions.
+     * @return JsonResponse Un tableau de résultats filtrés au format JSON.
+     */
     #[Route('/recherche/{param}', name: 'app_recherche_ajax')]
     public function rechercheAjax(string $param, UserRepository $userRepository, SessionRepository $sessionRepository): JsonResponse
     {
+        /* On récupère et formate les donnés */
         $data = json_decode($param, true);
-        $search = strtolower(trim($data['search'] ?? ''));
+        $search = strtolower(trim($data['search'] ?? '')); //on ignore la cast en mettant en minuscule
+            /* On récupère les autre donnés */
         $utilisateurs = $data['utilisateurs'] ?? false;
         $sessions = $data['sessions'] ?? false;
         $ordre = ($data['ordre'] ?? true) ? 'ASC' : 'DESC';
@@ -145,7 +162,9 @@ final class HomeController extends AbstractController
 
         $results = [];
 
+        /* Si on a des utilisateurs */
         if ($utilisateurs) {
+            /* Requet DQL a déplacer dans le repot */
             $users = $userRepository->createQueryBuilder('u')
                 ->where('LOWER(u.name) LIKE :search')
                 ->orderBy('u.name', $ordre)
@@ -154,6 +173,7 @@ final class HomeController extends AbstractController
                 ->getQuery()
                 ->getResult();
 
+            /* Pour chaque utilisateurs on déplace dans la variable de résultat final */
             foreach ($users as $u) {
                 $results[] = [
                     'type' => 'user',
@@ -165,6 +185,7 @@ final class HomeController extends AbstractController
         }
 
         if ($sessions) {
+            /* Requet DQL a déplacer dans le repot */
             $sessions = $sessionRepository->createQueryBuilder('s')
                 ->where('LOWER(s.sessionName) LIKE :search')
                 ->orderBy('s.sessionName', $ordre)
@@ -172,7 +193,7 @@ final class HomeController extends AbstractController
                 ->setMaxResults($max)
                 ->getQuery()
                 ->getResult();
-
+            /* Pour chaque sessions on déplace dans la variable de résultat final */
             foreach ($sessions as $s) {
                 $results[] = [
                     'type' => 'session',
