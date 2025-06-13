@@ -16,8 +16,26 @@ class SessionRepository extends ServiceEntityRepository
         parent::__construct($registry, Session::class);
     }
 
+    public function findSessionsByNamePrefix(string $param): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('LOWER(s.sessionName) LIKE LOWER(:param)')
+            ->setParameter('param', $param . '%') // Recherche des noms qui commencent par $param
+            ->getQuery()
+            ->getResult();
+    }
 
-
+    public function findSessionsByNameOrderMax(string $ordre, string $search, int $max): array
+    {
+        return $this->createQueryBuilder('s')
+                ->where('LOWER(s.sessionName) LIKE :search')
+                ->orderBy('s.sessionName', $ordre)
+                ->setParameter('search', $search . '%')
+                ->setMaxResults($max)
+                ->getQuery()
+                ->getResult();
+    }
+    /*  */
 
     //    /**
     //     * @return Session[] Returns an array of Session objects

@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use App\Repository\InternRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\SessionRepository;
+use App\Service\RechercheService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -91,19 +92,11 @@ final class HomeController extends AbstractController
      * @return JsonResponse Retourne une liste d'utilisateurs sous forme de JSON ou un message d'erreur.
      */
     #[Route('/app_search/{param}', name: 'app_search', methods: ['GET'])]
-    public function search(string $param, UserRepository $userRepository, SessionRepository $sessionRepository): JsonResponse
+    public function search(string $param, UserRepository $userRepository, SessionRepository $sessionRepository, /* EntityManager $em */): JsonResponse
     {
         /* Requet DQL pour trouver un name qui commence par param */
-        $users = $userRepository->createQueryBuilder('u')
-            ->where('LOWER(u.name) LIKE LOWER(:param)')
-            ->setParameter('param', $param . '%') // Recherche des noms qui commencent par $param
-            ->getQuery()
-            ->getResult();
-        $sessions = $sessionRepository->createQueryBuilder('s')
-            ->where('LOWER(s.sessionName) LIKE LOWER(:param)')
-            ->setParameter('param', $param . '%') // Recherche des noms qui commencent par $param
-            ->getQuery()
-            ->getResult();
+        $users = $userRepository->findUsersByNamePrefix($param);
+        $sessions = $sessionRepository->findSessionsByNamePrefix($param);
 
         /* Si aucun utilisateurs trouvé alors on renvoie une erreur */
         if (!$users  && !$sessions) {
@@ -148,62 +141,8 @@ final class HomeController extends AbstractController
      * @return JsonResponse Un tableau de résultats filtrés au format JSON.
      */
     #[Route('/recherche/{param}', name: 'app_recherche_ajax')]
-    public function rechercheAjax(string $param, UserRepository $userRepository, SessionRepository $sessionRepository): JsonResponse
+    public function rechercheAjax(string $param, UserRepository $userRepository, SessionRepository $sessionRepository, RechercheService $rechercheService): JsonResponse
     {
-        /* On récupère et formate les donnés */
-        $data = json_decode($param, true);
-        $search = strtolower(trim($data['search'] ?? '')); //on ignore la cast en mettant en minuscule
-            /* On récupère les autre donnés */
-        $utilisateurs = $data['utilisateurs'] ?? false;
-        $sessions = $data['sessions'] ?? false;
-        $ordre = ($data['ordre'] ?? true) ? 'ASC' : 'DESC';
-        $max = $data['maxRes'] ?? 100;
-
-
-        $results = [];
-
-        /* Si on a des utilisateurs */
-        if ($utilisateurs) {
-            /* Requet DQL a déplacer dans le repot */
-            $users = $userRepository->createQueryBuilder('u')
-                ->where('LOWER(u.name) LIKE :search')
-                ->orderBy('u.name', $ordre)
-                ->setParameter('search', $search . '%')
-                ->setMaxResults($max)
-                ->getQuery()
-                ->getResult();
-
-            /* Pour chaque utilisateurs on déplace dans la variable de résultat final */
-            foreach ($users as $u) {
-                $results[] = [
-                    'type' => 'user',
-                    'id' => $u->getId(),
-                    'name' => $u->getName(),
-                    'email' => $u->getEmail(),
-                ];
-            }
-        }
-
-        if ($sessions) {
-            /* Requet DQL a déplacer dans le repot */
-            $sessions = $sessionRepository->createQueryBuilder('s')
-                ->where('LOWER(s.sessionName) LIKE :search')
-                ->orderBy('s.sessionName', $ordre)
-                ->setParameter('search', $search . '%')
-                ->setMaxResults($max)
-                ->getQuery()
-                ->getResult();
-            /* Pour chaque sessions on déplace dans la variable de résultat final */
-            foreach ($sessions as $s) {
-                $results[] = [
-                    'type' => 'session',
-                    'id' => $s->getId(),
-                    'name' => $s->getSessionName(),
-                    'places' => ($s->getNbPlaceReserved() + count($s->getInterns())) . '/' . $s->getNbPlaceTt()
-                ];
-            }
-        }
-
-        return new JsonResponse($results);
+        return new JsonResponse($rechercheService->filterInput($param, $userRepository, $sessionRepository));
     }
 }
