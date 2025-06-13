@@ -24,19 +24,26 @@
         </tr>
       </thead>
       <tbody>
-        {% for user in users %}
-          <tr class="border-t">
-            <td class="px-4 py-2"><a href="{{ path('profil', {'id': user.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ user.name }}</a></td>
-            <td class="px-4 py-2">{{ user.email }}</td>
-            <td class="px-4 py-2">{{ user.city }}</td>
-          </tr>
-        {% else %}
-          <tr>
-            <td colspan="3" class="px-4 py-2 text-gray-500">Aucun utilisateur trouvé.</td>
-          </tr>
-        {% endfor %}
+          {% for user in pagination %}
+              <tr class="border-t">
+                  <td class="px-4 py-2">
+                      <a href="{{ path('profil', {'id': user.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                          {{ user.name }}
+                      </a>
+                  </td>
+                  <td class="px-4 py-2">{{ user.email }}</td>
+                  <td class="px-4 py-2">{{ user.city }}</td>
+              </tr>
+          {% else %}
+              <tr>
+                  <td colspan="3" class="px-4 py-2 text-gray-500">Aucun utilisateur trouvé.</td>
+              </tr>
+          {% endfor %}
       </tbody>
     </table>
+  </div>
+  <div class="mt-4 flex justify-center">
+      {{ knp_pagination_render(pagination) }}
   </div>
 </div>
 {% endblock %}

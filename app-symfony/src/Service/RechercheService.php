@@ -8,7 +8,15 @@ use App\Repository\UserRepository;
 class RechercheService
 {
 
-    
+    /**
+     * Filtre les données en fonction des paramètres de recherche et retourne une liste d'utilisateurs et de sessions.
+     *
+     * @param string $param JSON contenant les critères de recherche et les options (utilisateurs, sessions, ordre, limite).
+     * @param UserRepository $userRepository Le repository permettant de récupérer les utilisateurs.
+     * @param SessionRepository $sessionRepository Le repository permettant de récupérer les sessions.
+     * 
+     * @return array Retourne un tableau associatif contenant les résultats filtrés (utilisateurs et/ou sessions).
+     */
     public function filterInput(string $param, UserRepository $userRepository, SessionRepository $sessionRepository): array
     {
         $data = json_decode($param, true);

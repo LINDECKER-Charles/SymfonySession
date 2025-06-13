@@ -9,6 +9,7 @@ use App\Form\CategoryForm;
 use App\Repository\ModuleRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,12 +24,23 @@ final class ModuleController extends AbstractController
      * @return Response
      */
     #[Route('/module', name: 'app_module')]
-    public function index(ModuleRepository $moduleRepository): Response
+    public function index(ModuleRepository $moduleRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $modules = $moduleRepository->findAll();
-        return $this->render('module/index.html.twig', [
-            'modules' => $modules,
-        ]);
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())) {
+            $query = $moduleRepository->createQueryBuilder('i')->getQuery();
+
+            $pagination = $paginator->paginate(
+                $query, // Requête Doctrine
+                $request->query->getInt('page', 1), // Numéro de page
+                10 // Nombre d'éléments par page
+            );
+ 
+            return $this->render('module/index.html.twig', [
+                'pagination' => $pagination,
+            ]);   
+        } else {
+            return $this->redirectToRoute('app_home');  
+        }
     } 
     /**
      * Crée ou modifie un module selon la présence d'un ID.
@@ -143,12 +155,23 @@ final class ModuleController extends AbstractController
     }
 
     #[Route('/category', name: 'app_category')]
-    public function indexbis(CategoryRepository $categoryRepository): Response
+    public function indexbis(CategoryRepository $categoryRepository, PaginatorInterface $paginator, Request $request,): Response
     {
-        $categorys = $categoryRepository->findAll();
-        return $this->render('category/index.html.twig', [
-            'categorys' => $categorys,
-        ]);
+            if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())) {
+            $query = $categoryRepository->createQueryBuilder('i')->getQuery();
+
+            $pagination = $paginator->paginate(
+                $query, // Requête Doctrine
+                $request->query->getInt('page', 1), // Numéro de page
+                10 // Nombre d'éléments par page
+            );
+ 
+            return $this->render('category/index.html.twig', [
+                'pagination' => $pagination,
+            ]);   
+        } else {
+            return $this->redirectToRoute('app_home');  
+        }
     } 
 /**
  * Crée une nouvelle catégorie si elle n'existe pas déjà.

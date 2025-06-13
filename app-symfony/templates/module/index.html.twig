@@ -23,23 +23,33 @@
         </tr>
       </thead>
       <tbody>
-        {% for module in modules %}
-          <tr class="border-t">
-            <td class="px-4 py-2"><a href="{{ path('detail_module', {'id': module.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.mudleName }}</a></td>
-            {% if module.moduleCategory %}
-                <td class="px-4 py-2"><a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ module.moduleCategory.categoryName }}</a></td>
-            {% else %}
-                <span class="text-gray-500 italic">Aucune catégorie</span>
-            {% endif %}
-
-          </tr>
-        {% else %}
-          <tr>
-            <td colspan="2" class="px-4 py-2 text-gray-500">Aucun module trouvé.</td>
-          </tr>
-        {% endfor %}
+          {% for module in pagination %}
+              <tr class="border-t">
+                  <td class="px-4 py-2">
+                      <a href="{{ path('detail_module', {'id': module.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                          {{ module.mudleName }}
+                      </a>
+                  </td>
+                  {% if module.moduleCategory %}
+                      <td class="px-4 py-2">
+                          <a href="{{ path('detail_category', {'id': module.moduleCategory.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                              {{ module.moduleCategory.categoryName }}
+                          </a>
+                      </td>
+                  {% else %}
+                      <td class="px-4 py-2 text-gray-500 italic">Aucune catégorie</td>
+                  {% endif %}
+              </tr>
+          {% else %}
+              <tr>
+                  <td colspan="2" class="px-4 py-2 text-gray-500">Aucun module trouvé.</td>
+              </tr>
+          {% endfor %}
       </tbody>
     </table>
+  </div>
+  <div class="mt-4 flex justify-center">
+      {{ knp_pagination_render(pagination) }}
   </div>
 </div>
 {% endblock %}

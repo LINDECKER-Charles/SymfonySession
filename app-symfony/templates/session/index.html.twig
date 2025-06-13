@@ -30,8 +30,8 @@
         </thead>
         <tbody>
           {% set found = false %}
-          {% for session in sessions %}
-            {% if session.startDate|date("U") >= now %}
+          {% for session in pagination %}
+              {% if session.startDate|date("U") >= now %}
               {% set found = true %}
               {% set rate = session.nbPlaceReserved / session.nbPlaceTt * 100 %}
               <tr class="border-t">
@@ -72,8 +72,8 @@
         </thead>
         <tbody>
           {% set found = false %}
-          {% for session in sessions %}
-            {% if session.startDate|date("U") < now %}
+          {% for session in pagination %}
+              {% if session.startDate|date("U") < now %}
               {% set found = true %}
               <tr class="border-t text-gray-600">
                 <td class="px-4 py-2"><a class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition" href="{{ path('detail_session', {'id': session.id}) }}">{{ session.sessionName }}</a></td>
@@ -88,6 +88,9 @@
         </tbody>
       </table>
     </div>
+  <div class="mt-4 flex justify-center">
+      {{ knp_pagination_render(pagination) }}
+  </div>
   </section>
 
 </div>

@@ -17,23 +17,29 @@
     <table class="min-w-full text-left">
       <thead class="bg-[#3B4C66] text-white sticky top-0 z-10">
         <tr>
-          <th class="px-4 py-2">#</th>
           <th class="px-4 py-2">Nom de la catégorie</th>
         </tr>
       </thead>
       <tbody>
-        {% for category in categorys %}
-          <tr class="border-t">
-            <td class="px-4 py-2">{{ loop.index }}</td>
-            <td class="px-4 py-2"><a href="{{ path('detail_category', {'id': category.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">{{ category.categoryName }}</a></td>
-          </tr>
-        {% else %}
-          <tr>
-            <td colspan="2" class="px-4 py-2 text-gray-500">Aucune catégorie trouvée.</td>
-          </tr>
-        {% endfor %}
+          {% for category in pagination %}
+              <tr class="border-t">
+                  <td class="px-4 py-2">
+                      <a href="{{ path('detail_category', {'id': category.id}) }}" class="text-[#3B4C66] font-semibold hover:underline hover:text-[#4F627E] transition">
+                          {{ category.categoryName }}
+                      </a>
+                  </td>
+              </tr>
+          {% else %}
+              <tr>
+                  <td colspan="2" class="px-4 py-2 text-gray-500">Aucune catégorie trouvée.</td>
+              </tr>
+          {% endfor %}
       </tbody>
     </table>
   </div>
+  <div class="mt-4 flex justify-center">
+    {{ knp_pagination_render(pagination) }}
+  </div>
+
 </div>
 {% endblock %}

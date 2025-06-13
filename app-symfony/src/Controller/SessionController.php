@@ -12,11 +12,12 @@ use App\Repository\ModuleRepository;
 use App\Repository\SessionRepository;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\VarDumper\VarDumper;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\VarDumper\VarDumper;
 
 final class SessionController extends AbstractController
 {
@@ -27,8 +28,40 @@ final class SessionController extends AbstractController
      * @return Response
      */
     #[Route('/session', name: 'app_session')]
-    public function index(SessionRepository $sessionRepository): Response
+    public function index(SessionRepository $sessionRepository, Request $request, PaginatorInterface $paginator): Response
     {
+       if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            $query = $sessionRepository->createQueryBuilder('i')->getQuery();
+
+            $pagination = $paginator->paginate(
+                $query, // Requête Doctrine
+                $request->query->getInt('page', 1), // Numéro de page
+                10 // Nombre d'éléments par page
+            );
+ 
+            return $this->render('session/index.html.twig', [
+                'pagination' => $pagination,
+            ]);
+        } else if (in_array('FORMATEUR', $this->getUser()->getRoles())) {
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $query = $user->getSessions();
+            $pagination = $paginator->paginate(
+                $query, // Requête Doctrine
+                $request->query->getInt('page', 1), // Numéro de page
+                10 // Nombre d'éléments par page
+            );
+ 
+            return $this->render('session/index.html.twig', [
+                'pagination' => $pagination,
+            ]);
+ 
+        }else{
+            return $this->redirectToRoute('app_home'); 
+        }
+
+
+
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             $sessions = $sessionRepository->findAll();
             return $this->render('session/index.html.twig', [

@@ -8,6 +8,7 @@ use App\Form\InternForm;
 use App\Form\ModuleForm;
 use App\Repository\InternRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,14 +23,21 @@ final class InternController extends AbstractController
      * @return Response
      */
     #[Route('/intern', name: 'app_intern')]
-    public function index(InternRepository $internRepository): Response
+    public function index(Request $request, InternRepository $internRepository, PaginatorInterface $paginator): Response
     {
-        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            $interns = $internRepository->findAll();
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('FORMATEUR', $this->getUser()->getRoles())) {
+            $query = $internRepository->createQueryBuilder('i')->getQuery();
+
+            $pagination = $paginator->paginate(
+                $query, // Requête Doctrine
+                $request->query->getInt('page', 1), // Numéro de page
+                10 // Nombre d'éléments par page
+            );
+ 
             return $this->render('intern/index.html.twig', [
-                'interns' => $interns,
+                'pagination' => $pagination,
             ]);   
-        }else{
+        } else {
             return $this->redirectToRoute('app_home');  
         }
     }
